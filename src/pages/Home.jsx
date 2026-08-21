@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ShieldCheck, HandCoins, Lock } from 'lucide-react';
+import { apiFetch, toAssetUrl } from '../utils/api';
 import bgImage from '../assets/image/image.png';
-import bgSlide from '../assets/image/Banner1.jpg';
-import bgSlide2 from '../assets/image/Banner2.jpg';
-import bgSlide3 from '../assets/image/Banner3.jpg';
-import bgSlide4 from '../assets/image/Banner6.jpg';
+// import bgSlide from '../assets/image/Banner1.jpg';
+// import bgSlide2 from '../assets/image/Banner2.jpg';
+// import bgSlide3 from '../assets/image/Banner3.jpg';
+// import bgSlide4 from '../assets/image/Banner6.jpg';
 import UsersIconImage from '../assets/image/MyCommunity.png';
 import UsersIcon2Image from '../assets/image/HajjFund.png';
 import UsersIcon3Image from '../assets/image/FoodBank.png';
@@ -104,25 +105,6 @@ function AnimatedNumber({ value, duration = 1400 }) {
 /*  Content & Banner Data                                           */
 /* ---------------------------------------------------------------- */
 
-const bannerSlides = [
-  {
-    id: 1,
-    image: bgSlide,
-  },
-  {
-    id: 2,
-    image: bgSlide2,
-  },
-  {
-    id: 2,
-    image: bgSlide3,
-  },
-  {
-    id: 2,
-    image: bgSlide4,
-  },
-];
-
 const quickLinks = [
   {
     title: 'MY COMMUNITY FUND',
@@ -158,6 +140,17 @@ const quickLinks = [
     ),
   },
   {
+    title: 'BUSINESS COOPERETIVE',
+    href: 'https://cbc.takafulcambodia.org/',
+    icon: (
+       <img
+        src={UsersIcon4Image}
+        alt="User group icon representing team or community"
+        className="object-contain h-130 w-130"
+      />
+    ),
+  },
+  {
     title: 'FOOD BANK',
     href: '/food',
     icon: (
@@ -168,17 +161,7 @@ const quickLinks = [
       />
     ),
   },
-  {
-    title: 'BUSINESS NETWORK',
-    href: 'https://cbc.takafulcambodia.org/',
-    icon: (
-       <img
-        src={UsersIcon4Image}
-        alt="User group icon representing team or community"
-        className="object-contain h-130 w-130"
-      />
-    ),
-  },
+  
   {
     title: 'EDUCATION PROGRAMS',
     href: '/cata-youth',
@@ -291,24 +274,6 @@ const sadaqah = [
 ]
 
 
-const learnMoreLinks = [
-  { label: 'About us', href: '/about-us' },
-  { label: 'Partner', href: '/partner' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Annual Report', href: '/category/annual-report' },
-  { label: 'Contact us', href: '/contact-us' },
-  { label: 'Privacy Policy', href: '/privacy-policy-2' },
-  { label: 'Terms & Refunds', href: '/terms-and-conditions' },
-]
-
-const socialLinks = [
-  { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=100088893735790' },
-  { label: 'Twitter', href: 'https://twitter.com/home' },
-  { label: 'Youtube', href: 'https://www.youtube.com/channel/UCwbNKD6eeq_zE5Zz8EpznDg' },
-  { label: 'Telegram', href: 'https://t.me/amanahtakafulassociation' },
-  { label: 'Instagram', href: '#' },
-]
-
 const featuredFunds = [
   {
     title: "My Community Fund",
@@ -341,10 +306,40 @@ const trustBadges = [
 
 export default function Home() {
   const [activeSadaqahTab, setActiveSadaqahTab] = useState(0)
+  const [banners, setBanners] = useState([])
+  const [bannersLoading, setBannersLoading] = useState(true)
   const [currentSlide, setCurrentSlide] = useState(0)
   const [hasPopped, setHasPopped] = useState(false)
   const activeSadaqah = sadaqah[activeSadaqahTab]
   const isFirstLoad = !hasPopped
+
+  // Fetch banners from API
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        setBannersLoading(true)
+        const data = await apiFetch('/banners', { method: 'GET' });
+        if (data && Array.isArray(data) && data.length > 0) {
+          // Transform API data to match carousel format
+          const formattedBanners = data.map(banner => ({
+            id: banner.id,
+            // Convert relative image paths to full URLs
+            image: toAssetUrl(banner.image),
+            title: banner.title,
+            link: banner.link
+          }));
+          setBanners(formattedBanners);
+        }
+      } catch (error) {
+        console.error('Failed to fetch banners:', error);
+        // Keep empty banners on error
+      } finally {
+        setBannersLoading(false)
+      }
+    };
+    fetchBanners();
+  }, []);
+
   useEffect(() => {
     const popTimeout = setTimeout(() => setHasPopped(true), 800)
     return () => clearTimeout(popTimeout)
@@ -352,10 +347,10 @@ export default function Home() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % bannerSlides.length)
+      setCurrentSlide((prev) => (prev + 1) % banners.length)
     }, 5000)
     return () => clearInterval(timer)
-  }, [])
+  }, [banners.length])
 
   return (
     <div className="min-h-screen bg-white text-slate-800">
@@ -423,23 +418,24 @@ export default function Home() {
       `}</style>
 
       {/* ===== QUICK LINKS GRID ===== */}
-   <section
-  className="relative px-4 overflow-hidden bg-center bg-cover py-14"
+<section
+  className="relative px-4 bg-center bg-cover py-14"
   style={{ backgroundImage: `url(${bgImage})` }}
 >
   {/* Light Overlay */}
   <div className="absolute inset-0 pointer-events-none bg-white/75" />
 
   <div className="relative z-10 mx-auto max-w-7xl">
-    <div className="grid grid-cols-2 text-center gap-x-4 gap-y-6 sm:grid-cols-4 lg:grid-cols-7">
+    {/* Horizontal scroll container on mobile (x-axis only) */}
+    <div className="flex items-start gap-6 pt-6 pb-4 overflow-x-auto overflow-y-hidden text-center touch-pan-x scrollbar-none lg:grid lg:grid-cols-7 lg:gap-x-4 lg:gap-y-6 lg:pb-0 lg:pt-6">
       {quickLinks.map((link, idx) => (
         <Link
           key={idx}
           to={link.href}
-          className="relative flex flex-col items-center justify-start w-full cursor-pointer group"
+          className="relative flex flex-col items-center justify-start cursor-pointer shrink-0 w-28 lg:w-full group"
         >
           {/* Outer Icon Wrapper */}
-          <div className="relative flex items-center justify-center w-20 h-20 sm:w-28 sm:h-28 shrink-0">
+          <div className="relative flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 shrink-0">
             
             {/* 🌟 STAGGERED WAVE 1 🌟 */}
             <span className="absolute inset-0 z-0 rounded-full opacity-0 pointer-events-none bg-slate-400/40 group-hover:animate-smoothHalo" />
@@ -475,39 +471,53 @@ export default function Home() {
       {/* ===== HERO BANNER SLIDE ===== */}
      <section className="py-6 bg-slate-100">
   <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-    <div className="relative overflow-hidden bg-white shadow-md rounded-2xl">
-      {bannerSlides.map((slide, idx) => (
-        <div
-          key={slide.id}
-          className={`transition-all duration-700 ease-in-out ${
-            idx === currentSlide
-              ? isFirstLoad
-                ? 'block opacity-100 animate-pop-scale'
-                : 'block opacity-100 slide-right'
-              : 'hidden opacity-0'
-          }`}
-        >
-          <img
-            src={slide.image}
-            alt={`Banner slide ${slide.id}`}
-            className="w-full h-auto max-h-[500px] object-cover"
-          />
+    <div className="relative overflow-hidden bg-white shadow-md rounded-2xl min-h-[300px]">
+      {bannersLoading ? (
+        <div className="flex items-center justify-center w-full h-96 bg-slate-200">
+          <p className="text-slate-500">Loading banners...</p>
         </div>
-      ))}
+      ) : banners.length > 0 ? (
+        <>
+          {banners.map((slide, idx) => (
+            <div
+              key={slide.id}
+              className={`transition-all duration-700 ease-in-out ${
+                idx === currentSlide
+                  ? isFirstLoad
+                    ? 'block opacity-100 animate-pop-scale'
+                    : 'block opacity-100 slide-right'
+                  : 'hidden opacity-0'
+              }`}
+            >
+              <img
+                src={slide.image}
+                alt={`Banner slide ${slide.id}`}
+                className="w-full h-auto max-h-[500px] object-cover"
+              />
+            </div>
+          ))}
 
-      {/* Navigation Dots */}
-      <div className="absolute left-0 right-0 z-20 flex justify-center gap-2 bottom-4">
-        {bannerSlides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentSlide(i)}
-            className={`h-2.5 rounded-full transition-all duration-300 ${
-              currentSlide === i ? 'w-8 bg-[#0b3d3a]' : 'w-2.5 bg-slate-300/80 hover:bg-slate-300'
-            }`}
-            aria-label={`Go to slide ${i + 1}`}
-          />
-        ))}
-      </div>
+          {/* Navigation Dots */}
+          {banners.length > 1 && (
+            <div className="absolute left-0 right-0 z-20 flex justify-center gap-2 bottom-4">
+              {banners.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentSlide(i)}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    currentSlide === i ? 'w-8 bg-[#0b3d3a]' : 'w-2.5 bg-slate-300/80 hover:bg-slate-300'
+                  }`}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="flex items-center justify-center w-full h-96 bg-slate-200">
+          <p className="text-slate-500">No banners available</p>
+        </div>
+      )}
     </div>
   </div>
 </section>

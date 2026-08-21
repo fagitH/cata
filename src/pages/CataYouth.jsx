@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // 1. Ensure these relative paths match your folder structure exactly
 import catayouth from '../assets/image/cata_youth/Banner_catayouth.jpg';
@@ -8,34 +8,6 @@ import scholarship from '../assets/image/cata_youth/Banner_scholarship.jpg';
 function CataYouthScholarship() {
   const [suggestionMessage, setSuggestionMessage] = useState('');
   
-  // Dynamic state for scholarships from backend
-  const [scholarships, setScholarships] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Fetch dynamic scholarship announcements from backend API
-  useEffect(() => {
-    const fetchScholarships = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/scholarships');
-        
-        if (!response.ok) {
-          throw new Error('Failed to load scholarship announcements.');
-        }
-
-        const data = await response.json();
-        setScholarships(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchScholarships();
-  }, []);
-
   const handleSuggestionSubmit = (e) => {
     e.preventDefault();
     if (!suggestionMessage.trim()) {
@@ -158,104 +130,6 @@ function CataYouthScholarship() {
               The CATA Scholarship is a highly selective, full scholarship for exceptional students from registered members in which CATA has a presence. We are looking for individuals fueled up to go beyond the ordinary.
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* ================= SECTION 3: SCHOLARSHIP ANNOUNCEMENT (DYNAMIC DATA) ================= */}
-      <section className="w-full bg-slate-100/70 py-12 px-4 border-t border-slate-200/60">
-        <div className="max-w-6xl mx-auto space-y-8">
-          
-          <div className="text-center space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0088cc]">
-              Scholarship Announcement
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-              Explore open full-funding opportunities and programs available for registered members.
-            </p>
-          </div>
-
-          {/* LOADING STATE */}
-          {loading && (
-            <div className="flex justify-center items-center py-12 text-xs sm:text-sm text-slate-500 space-x-2">
-              <svg className="animate-spin h-5 w-5 text-[#0088cc]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span>Loading scholarship announcements...</span>
-            </div>
-          )}
-
-          {/* ERROR STATE */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 text-center py-4 px-6 rounded-xl text-xs sm:text-sm max-w-lg mx-auto">
-              {error}
-            </div>
-          )}
-
-          {/* EMPTY STATE */}
-          {!loading && !error && scholarships.length === 0 && (
-            <div className="bg-white border border-slate-200 text-center py-12 px-6 rounded-2xl text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-              No scholarship announcements available at this time.
-            </div>
-          )}
-
-          {/* DYNAMIC SCHOLARSHIP CARDS GRID */}
-          {!loading && !error && scholarships.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {scholarships.map((item) => (
-                <div
-                  key={item.id || item._id}
-                  className="bg-white border border-slate-200/80 rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-300 flex flex-col justify-between overflow-hidden group"
-                >
-                  <div>
-                    {/* CARD IMAGE */}
-                    <div className="w-full h-44 bg-slate-100 overflow-hidden relative">
-                      <img
-                        src={item.image_url || item.image || ''}
-                        alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-
-                    {/* CARD CONTENT */}
-                    <div className="p-4 space-y-2">
-                      <h3 className="text-sm font-bold text-slate-800 leading-snug line-clamp-2 group-hover:text-[#0088cc] transition-colors">
-                        {item.title}
-                      </h3>
-
-                      <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">
-                        {item.description}
-                      </p>
-
-                      <div className="pt-1">
-                        <a
-                          href={item.link || `/scholarship/${item.id}`}
-                          className="inline-flex items-center text-xs font-semibold text-[#0088cc] hover:text-[#006699] transition-colors"
-                        >
-                          <span>Read More</span>
-                          <svg className="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                          </svg>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* CARD FOOTER */}
-                  <div className="px-4 py-3 bg-slate-50/50 border-t border-slate-100 flex items-center space-x-2 text-slate-400 text-xs">
-                    <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 overflow-hidden shrink-0">
-                      <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <span className="truncate">{item.date || item.created_at}</span>
-                  </div>
-
-                </div>
-              ))}
-            </div>
-          )}
-
         </div>
       </section>
 

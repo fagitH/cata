@@ -1,58 +1,76 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HeartHandshake, Sprout, Home, Presentation, Handshake, Coins } from 'lucide-react';
+import { api, toAssetUrl } from '../utils/api';
+
+const iconList = [HeartHandshake, Sprout, Home, Presentation, Handshake, Coins];
+
+const getReportIcon = (title, index) => {
+  const normalizedTitle = String(title || '').toLowerCase();
+
+  if (normalizedTitle.includes('community') || normalizedTitle.includes('fund')) {
+    return HeartHandshake;
+  }
+  if (normalizedTitle.includes('riba') || normalizedTitle.includes('clearance')) {
+    return Sprout;
+  }
+  if (normalizedTitle.includes('water') || normalizedTitle.includes('sanitation')) {
+    return Home;
+  }
+  if (normalizedTitle.includes('human resource') || normalizedTitle.includes('development')) {
+    return Presentation;
+  }
+  if (normalizedTitle.includes('partnership') || normalizedTitle.includes('partner')) {
+    return Handshake;
+  }
+  if (normalizedTitle.includes('charity') || normalizedTitle.includes('relief')) {
+    return Coins;
+  }
+
+  return iconList[index % iconList.length];
+};
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return '/images/reports/general-charity-2025.jpg';
+  return toAssetUrl(imagePath);
+};
 
 export default function AnnualReportsPage() {
-  const reports2025 = [
-    {
-      id: 1,
-      slug: 'general-charity-2025',
-      title: '1. Report of My Community Fund Program 2025',
-      description:
-        'A mutual assistance and social solidarity fund providing critical support for vulnerable families, education initiatives, and broader community welfare needs.',
-      icon: HeartHandshake,
-    },
-    {
-      id: 2,
-      slug: 'general-charity-2025',
-      title: '2. Report of RIBA Clearance Program 2025',
-      description:
-        'Also called the Wealth Purification Program, A Shariah-compliant solution designed to help Muslim individuals and businesses transition away from interest-based (riba) financial obligations toward ethical and permissible financial arrangements.',
-      icon: Sprout,
-    },
-    {
-      id: 3,
-      slug: 'general-charity-2025',
-      title: '3. Report of Sanitation & Water Wells Project 2025',
-      description:
-        'A report detailing the construction and improvement of sanitation facilities and water wells to provide clean, safe water for communities in 2025.',
-      icon: Home,
-    },
-    {
-      id: 4,
-      slug: 'general-charity-2025',
-      title: '4. Report of Human Resource Development 2025',
-      description:
-        'A review of training, capacity-building programs, and staff development initiatives aimed at strengthening human resources in 2025.',
-      icon: Presentation,
-    },
-    {
-      id: 5,
-      slug: 'general-charity-2025',
-      title: '5. Report of Partnership 2025',
-      description:
-        'An outline of collaborations with local and international partners, focusing on joint programs, contributions, and shared achievements in 2025.',
-      icon: Handshake,
-    },
-    {
-      id: 6,
-      slug: 'general-charity-2025',
-      title: '6. Report of General Charity 2025',
-      description:
-        'A comprehensive summary of charitable activities, including emergency aid, social support, and welfare programs carried out throughout 2025.',
-      icon: Coins,
-    },
-  ];
+  const [reports2025, setReports2025] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const latestReportYear = reports2025
+    .map((report) => Number(report.year))
+    .filter((year) => Number.isFinite(year) && year > 0)
+    .sort((firstYear, secondYear) => secondYear - firstYear)[0];
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const data = await api.get('/annual_reports');
+        const list = Array.isArray(data) ? data : [];
+        setReports2025(
+          list.map((report, index) => ({
+            id: report.id,
+            slug: report.slug || `report-${report.id ?? index + 1}`,
+            year: report.year,
+            title: `${index + 1}. ${report.title}${report.year && !String(report.title).trim().endsWith(String(report.year)) ? ` ${report.year}` : ''}`,
+            description: report.description || 'Annual report summary.',
+            image: getImageUrl(report.image || report.cover_image || report.image_url),
+            icon: getReportIcon(report.title, index),
+          }))
+        );
+      } catch (error) {
+        console.error('Failed to fetch annual reports:', error);
+        setReports2025([]);
+        setError('Annual reports are currently unavailable.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReports();
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
@@ -136,36 +154,64 @@ export default function AnnualReportsPage() {
       <main className="max-w-6xl px-4 mx-auto my-8">
         <div className="bg-[#0070ba] rounded-2xl p-6 sm:p-8 shadow-md">
           <h2 className="mb-6 text-2xl font-bold text-white sm:text-3xl">
-            Year of 2025
+            Annual Reports{latestReportYear ? ` - ${latestReportYear}` : ''}
           </h2>
 
-          <div className="space-y-4">
-            {reports2025.map((report) => {
-              const IconComponent = report.icon;
-              return (
-                <Link
-                  key={report.id}
-                  to={`/reports/${report.slug}`}
-                  className="block bg-[#f0f4f8] hover:bg-white rounded-xl p-5 transition-all duration-200 border border-slate-200/60 shadow-sm group cursor-pointer"
-                >
-                  <div className="flex items-start gap-4 sm:gap-6">
-                    <div className="shrink-0 p-2 sm:p-3 text-[#e11d48] group-hover:scale-105 transition-transform duration-200">
-                      <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 stroke-[1.5]" />
-                    </div>
+          {loading ? (
+            <div className="py-8 text-center text-white/80 text-sm font-medium">
+              Loading annual reports...
+            </div>
+          ) : error ? (
+            <div className="py-8 text-center text-white/80 text-sm font-medium">{error}</div>
+          ) : reports2025.length === 0 ? (
+            <div className="py-8 text-center text-white/80 text-sm font-medium">
+              No annual reports are available.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {reports2025.map((report) => {
+                const IconComponent = report.icon;
+                return (
+                  <Link
+                    key={report.id}
+                    to={`/reports/${report.id}`}
+                    className="block bg-white hover:bg-slate-50 rounded-2xl overflow-hidden transition-all duration-200 border border-slate-200/70 shadow-sm hover:shadow-lg group cursor-pointer"
+                  >
+                    <div className="flex flex-col sm:flex-row items-stretch gap-0">
+                      <div className="w-full sm:w-48 lg:w-56 h-40 sm:h-auto shrink-0 overflow-hidden bg-slate-100 relative">
+                        <img
+                          src={getImageUrl(report.image)}
+                          alt={report.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </div>
 
-                    <div className="flex-1">
-                      <h3 className="text-base sm:text-lg font-bold text-[#1e3a8a] group-hover:text-[#0070ba] transition-colors mb-1">
-                        {report.title}
-                      </h3>
-                      <p className="text-xs font-normal leading-relaxed sm:text-sm text-slate-600">
-                        {report.description}
-                      </p>
+                      <div className="flex-1 flex flex-col justify-between p-5 sm:p-6">
+                        <div className="flex items-start gap-3 mb-2">
+                          <div className="shrink-0 p-2 text-[#e11d48] group-hover:scale-110 transition-transform duration-300">
+                            <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 stroke-2" />
+                          </div>
+                          <h3 className="text-base sm:text-lg font-bold text-[#1e3a8a] group-hover:text-[#0070ba] transition-colors leading-snug">
+                            {report.title}
+                          </h3>
+                        </div>
+                        <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">
+                          {report.description}
+                        </p>
+                        {report.year && (
+                          <span className="self-start px-3 py-1 mt-3 text-xs font-semibold text-[#0070ba] bg-sky-50 border border-sky-100 rounded-full">
+                            Year: {report.year}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </main>
     </div>

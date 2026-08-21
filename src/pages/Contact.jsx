@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import ContactLogo from '../assets/image/logo.png';
 import contactHeroBg from '../assets/image/image.png';
 import { api } from '../utils/api';

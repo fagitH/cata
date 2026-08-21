@@ -1,59 +1,17 @@
-import React from 'react';
-
-// Official Secretariat team members list
-const secretariatMembers = [
-  {
-    id: 1,
-    name: 'Saman SEN',
-    title: 'Executive Director',
-    role: 'Overall Executive Management & Strategic Execution',
-    image: '/images/secretariat/sen-saman.jpg', // Replace with your image source
-  },
-  {
-    id: 2,
-    name: 'Sokry Fy',
-    title: 'Administration and Senior Finance Officer',
-    role: 'Financial Operations & Administrative Management',
-    image: '/images/secretariat/fy-sokry.jpg', // Replace with your image source
-  },
-  {
-    id: 3,
-    name: 'Sapirin Soprey',
-    title: 'Program Innovation & Senior Marketing Officer',
-    role: 'Program Development & Outreach Marketing',
-    image: '/images/secretariat/sapirin-soprey.jpg', // Replace with your image source
-  },
-  {
-    id: 4,
-    name: 'Neang Bovyna',
-    title: 'Membership Services Executive (Internship)',
-    role: 'Member Support & Community Relations',
-    image: '/images/secretariat/neang-bovyna.jpg', // Replace with your image source
-  },
-  {
-    id: 5,
-    name: 'Solaiman Rohanan',
-    title: 'Membership Services Executive (Internship)',
-    role: 'Member Relations & Onboarding Assistance',
-    image: '/images/secretariat/solaiman-rohanan.jpg', // Replace with your image source
-  },
-  {
-    id: 6,
-    name: 'Hosanita Hosen',
-    title: 'Graphic Design Assistant (Internship)',
-    role: 'Media Design & Visual Branding Support',
-    image: '/images/secretariat/hosanita-hosen.jpg', // Replace with your image source
-  },
-  {
-    id: 7,
-    name: 'EL SUFINA',
-    title: 'Membership Services Executive (Internship)',
-    role: 'Member Services & Operational Operations',
-    image: '/images/secretariat/el-sufina.jpg', // Replace with your image source
-  },
-];
+import React, { useEffect, useState } from 'react';
+import { api, toAssetUrl } from '../../utils/api.js';
 
 export default function CATASecretariatPage() {
+  const [secretariatMembers, setSecretariatMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.get('/secretariat_members')
+      .then((members) => setSecretariatMembers(Array.isArray(members) ? members : []))
+      .catch(() => setSecretariatMembers([]))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="min-h-screen font-sans bg-slate-50 text-slate-800">
       
@@ -80,6 +38,8 @@ export default function CATASecretariatPage() {
   
         {/* ===== HORIZONTAL PROFILE CARDS CONTAINER ===== */}
         <div className="flex flex-col gap-6">
+          {loading && <p className="py-8 text-center text-slate-500">Loading Secretariat members...</p>}
+          {!loading && secretariatMembers.length === 0 && <p className="py-8 text-center text-slate-500">No Secretariat members are available yet.</p>}
           {secretariatMembers.map((member) => (
             <div
               key={member.id}
@@ -87,11 +47,13 @@ export default function CATASecretariatPage() {
             >
               {/* MEMBER IMAGE CONTAINER */}
               <div className="w-full sm:w-64 sm:min-w-[16rem] h-56 sm:h-52 rounded-2xl overflow-hidden bg-slate-100 shrink-0">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="object-cover w-full h-full"
-                />
+                {member.image ? (
+                  <img src={toAssetUrl(member.image)} alt={member.name} className="object-cover w-full h-full" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-sky-100 text-5xl font-bold text-sky-600" aria-label={`${member.name} photo pending`}>
+                    {member.name?.charAt(0)}
+                  </div>
+                )}
               </div>
 
               {/* MEMBER DETAILS */}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600" role="img" aria-labelledby="title description">
+  <title id="title">KHQR payment image placeholder</title>
+  <desc id="description">Replace this file with the production KHQR payment QR image.</desc>
+  <rect width="600" height="600" fill="#f8fafc"/>
+  <rect x="24" y="24" width="552" height="552" rx="20" fill="#ffffff" stroke="#cbd5e1" stroke-width="4" stroke-dasharray="12 12"/>
+  <text x="300" y="270" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="32" font-weight="700">KHQR PAYMENT IMAGE</text>
+  <text x="300" y="322" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="22">Replace khqr-payment-qr.svg</text>
+  <text x="300" y="356" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="22">with your live QR image</text>
+</svg>

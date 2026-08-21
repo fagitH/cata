@@ -1,5 +1,4 @@
 import React from 'react';
-import { Handshake, Building2, Users, Target, ArrowRight } from 'lucide-react';
 import heroBg from '../assets/image/partnershipBanner.png'; // Adjust image import path as needed
 import partner1 from '../assets/image/partner6.jpg';
 import partner2 from '../assets/image/partner5.jpg';

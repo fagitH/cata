@@ -1,191 +1,157 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Coins, FileText, Calendar, Tag } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { api, toAssetUrl } from '../../utils/api';
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=400&fit=crop';
+  return toAssetUrl(imagePath);
+};
 
 export default function ReportDetailPage() {
-  const { slug } = useParams();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [report, setReport] = useState(null);
+  const [reportItems, setReportItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Dictionary containing data for all reports
-  const reportsData = {
-    'my-community-fund-2025': {
-      title: 'Report of My Community Fund Program 2025',
-      items: [],
-    },
-    'riba-clearance-2025': {
-      title: 'Report of RIBA Clearance Program 2025',
-      items: [],
-    },
-    'sanitation-water-wells-2025': {
-      title: 'Report of Sanitation & Water Wells Project 2025',
-      items: [],
-    },
-    'human-resource-development-2025': {
-      title: 'Report of Human Resource Development 2025',
-      items: [],
-    },
-    'partnership-2025': {
-      title: 'Report of Partnership 2025',
-      items: [],
-    },
-    'general-charity-2025': {
-      title: 'Report of General Charity 2025',
-      items: [
-        {
-          id: 1,
-          description:
-            'CATA has contributed for refugee who were affected by the Cambodia-Thailand border conflict. To the Minister of Tourism.',
-          amount: 'About KHR 10,000,000',
-          image: '/images/reports/refugee-tourism.jpg',
-        },
-        {
-          id: 2,
-          description:
-            'CATA has contributed for refugee who were affected by the Cambodia-Thailand border conflict. To ministry of religious affairs cambodia.',
-          amount: 'About KHR 4,256,000',
-          image: '/images/reports/refugee-religious.jpg',
-        },
-        {
-          id: 3,
-          description:
-            'CATA has contributed for Ramadan food package to different places in Cambodia.',
-          amount: 'About KHR 10,000,000',
-          image: '/images/reports/ramadan-food.jpg',
-        },
-        {
-          id: 4,
-          description:
-            'CATA has conducted Iftar Ramada in the muslim community in Cambodia.',
-          amount: 'About KHR 5,000,000',
-          image: '/images/reports/iftar-ramadan.jpg',
-        },
-        {
-          id: 5,
-          description:
-            'Comprehensive summary of charitable activities, including emergency aid, social support, and welfare programs carried out throughout 2025.',
-          amount: 'About KHR 55,000,000',
-          image: '/images/reports/hospital-aid.jpg',
-        },
-        {
-          id: 6,
-          description:
-            'CATA has donate Al-quran to school, students, family, and community.',
-          amount: '2500 Books',
-          image: '/images/reports/quran-donation.jpg',
-        },
-      ],
-    },
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
-  const report = reportsData[slug];
+        const targetReportId = String(id);
+        const foundReport = await api.get(`/annual_reports/${targetReportId}`);
+        setReport(foundReport);
+
+        const data = await api.get('/report_items');
+        const items = Array.isArray(data) ? data : [];
+        const filteredItems = items.filter((item) => {
+          const reportId = String(item.report_id).toLowerCase();
+          return reportId === targetReportId || reportId === 'all';
+        });
+        setReportItems(filteredItems);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+        setReport(null);
+        setReportItems([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-16">
-      {/* ===== HERO BANNER SECTION ===== */}
-      <section className="relative w-full overflow-hidden bg-[#0b3d3a] text-white py-12 sm:py-16 px-4 min-h-[220px] flex items-center justify-center shadow-inner">
-        {/* Islamic Pattern SVG Background */}
-        <svg
-          className="absolute inset-0 object-cover w-full h-full pointer-events-none opacity-30"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1200 400"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <defs>
-            <pattern
-              id="islamic-grid-detail"
-              width="60"
-              height="60"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M 30 0 L 38.8 21.2 L 60 30 L 38.8 38.8 L 30 60 L 21.2 38.8 L 0 30 L 21.2 21.2 Z"
-                fill="none"
-                stroke="#fbbf24"
-                strokeWidth="0.5"
-                strokeOpacity="0.25"
-              />
-            </pattern>
-          </defs>
-          <rect width="1200" height="400" fill="#0b3d3a" />
-          <rect width="1200" height="400" fill="url(#islamic-grid-detail)" />
-        </svg>
-
-        <div className="relative z-10 flex flex-col items-center max-w-4xl mx-auto text-center">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 mb-3 text-xs font-semibold tracking-widest uppercase border rounded-full bg-amber-500/10 border-amber-400/30 text-amber-300 backdrop-blur-sm">
-            <Calendar className="w-3.5 h-3.5 text-amber-300" />
-            2025 ANNUAL AUDIT & ACTIVITIES
+    <div className="min-h-screen pb-24 font-sans bg-slate-50 text-slate-800">
+      {loading || !report ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="inline-block w-8 h-8 border-4 border-[#0d4760] border-t-transparent rounded-full animate-spin" />
+            <p className="mt-4 text-slate-600">Loading report...</p>
+          </div>
+        </div>
+      ) : (
+      <>
+      {/* ===== HERO BANNER ===== */}
+      <section 
+        className="relative overflow-hidden bg-gradient-to-br from-[#0b384c] via-[#0d4760] to-[#125875] text-white py-14 lg:py-20 px-4 bg-cover bg-center"
+        style={{ 
+          backgroundImage: report?.image ? `url('${getImageUrl(report.image)}')` : undefined,
+          backgroundBlendMode: 'overlay'
+        }}
+      >
+        <div className="relative z-10 max-w-5xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 mb-4 text-xs font-semibold uppercase tracking-wider text-amber-300 bg-white/10 backdrop-blur-md rounded-full border border-amber-300/30">
+            Official Annual Report
           </span>
-
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white uppercase drop-shadow-sm max-w-3xl">
-            {report ? report.title : 'Report Details'}
+          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
+            {report?.title}
           </h1>
+          <p className="max-w-2xl mx-auto mt-4 text-base leading-relaxed text-slate-200 sm:text-lg">
+            {report?.subtitle}
+          </p>
         </div>
       </section>
 
-      {/* ===== BACK NAVIGATION BAR ===== */}
-      <div className="max-w-6xl mx-auto px-4 pt-6 sm:pt-8">
-        <Link
-          to="/annual-reports"
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 hover:text-[#0070ba] transition-all shadow-xs group"
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          Back to Annual Reports
-        </Link>
+      {/* ===== ACTION BAR ===== */}
+      <div className="max-w-5xl px-4 mx-auto -mt-6 sm:px-6">
+        <div className="flex flex-col gap-3 pt-10 pb-6 border-b sm:flex-row sm:items-center sm:justify-between border-slate-200/80">
+          <button
+            type="button"
+            onClick={() => navigate('/annual-reports')}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#0d4760] transition-colors group cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            Back to Annual Reports
+          </button>
+        </div>
       </div>
 
-      {/* ===== REPORT ITEMS SECTION ===== */}
-      <main className="max-w-6xl mx-auto px-4 mt-6">
-        {report && report.items && report.items.length > 0 ? (
+      {/* ===== REPORT ITEMS CARDS ===== */}
+      <main className="max-w-5xl px-4 mx-auto mt-8 sm:px-6">
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="inline-block w-8 h-8 border-4 border-[#0d4760] border-t-transparent rounded-full animate-spin" />
+            <p className="mt-4 text-slate-600">Loading report items...</p>
+          </div>
+        ) : reportItems.length === 0 ? (
+          <div className="text-center py-12 text-slate-600">
+            <p>No report items found</p>
+          </div>
+        ) : (
           <div className="space-y-6">
-            {report.items.map((item, index) => (
-              <div
+            {reportItems.map((item) => (
+              <article
                 key={item.id}
-                className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col md:flex-row items-stretch gap-6 md:gap-8 group"
+                className="group flex flex-col md:flex-row items-stretch bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
               >
-                {/* Image Container with Hover Scale */}
-                <div className="w-full md:w-[320px] lg:w-[360px] shrink-0 overflow-hidden rounded-xl border border-slate-100 relative bg-slate-100">
+                {/* Left Image */}
+                <div className="w-full md:w-72 lg:w-80 shrink-0 relative bg-slate-100 overflow-hidden min-h-[200px] md:min-h-full">
                   <img
-                    src={item.image}
-                    alt={item.description || 'Report image'}
-                    className="w-full h-52 sm:h-56 md:h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    src={getImageUrl(item.image)}
+                    alt={item.description}
+                    className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
-                  <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-md">
-                    Item #{index + 1}
-                  </div>
+                  {item.tag && (
+                    <span className="absolute top-3 left-3 px-2.5 py-1 text-xs font-semibold text-slate-800 bg-white/90 backdrop-blur-md rounded-lg shadow-xs border border-slate-200">
+                      {item.tag}
+                    </span>
+                  )}
                 </div>
 
-                {/* Content Area */}
-                <div className="flex-1 flex flex-col justify-between space-y-4 py-1">
-                  <p className="text-base sm:text-lg text-slate-700 leading-relaxed font-normal">
-                    {item.description}
-                  </p>
+                {/* Right Content */}
+                <div className="flex flex-col justify-between flex-1 p-6 space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2 text-slate-700">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                      <p className="text-base font-medium leading-relaxed sm:text-lg">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
 
-                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between flex-wrap gap-3">
-                    <span className="text-xs font-medium text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                      <Tag className="w-3.5 h-3.5" /> Contribution Value
+                  {/* Amount / Highlight Tag */}
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                    <span className="text-xs font-semibold tracking-wider uppercase text-slate-400">
+                      Contribution Value
                     </span>
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-blue-50/80 border border-blue-100 text-[#0070ba] font-bold text-lg sm:text-xl shadow-2xs">
-                      <Coins className="w-5 h-5 text-[#0070ba]" />
-                      {item.amount}
+                    <div className="inline-flex items-center px-4 py-1.5 rounded-xl bg-sky-50 border border-sky-100 text-[#0070ba]">
+                      <span className="text-xl font-black tracking-tight sm:text-2xl">
+                        {item.amount}
+                      </span>
                     </div>
                   </div>
                 </div>
-              </div>
+              </article>
             ))}
-          </div>
-        ) : (
-          /* Empty State View */
-          <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center shadow-xs my-8 max-w-2xl mx-auto">
-            <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-8 h-8 stroke-[1.5]" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-800 mb-1">Data Being Updated</h3>
-            <p className="text-sm text-slate-500 max-w-md mx-auto">
-              Detailed activity items and financial figures for this report section are currently being compiled and will be published shortly.
-            </p>
           </div>
         )}
       </main>
+      </>
+      )}
     </div>
   );
 }

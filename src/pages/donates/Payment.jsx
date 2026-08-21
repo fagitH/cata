@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import QRCode from 'qrcode';
 import { api } from '../../utils/api';
 
 export default function Payment() {
@@ -16,6 +17,8 @@ export default function Payment() {
   const [paymentMethod, setPaymentMethod] = useState('bank_transfer');
   const [captchaChecked, setCaptchaChecked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [khqrSession, setKhqrSession] = useState(null);
+  const [paymentStatus, setPaymentStatus] = useState('');
 
   const [donorDetails, setDonorDetails] = useState({
     firstName: '',
@@ -65,6 +68,78 @@ export default function Payment() {
         campaign_title: campaignTitle,
       };
 
+      if (paymentMethod === 'acleda_card') {
+        const response = await api.post('/acleda/card-session', payload);
+        const redirectForm = response?.redirect_form;
+
+        if (!redirectForm?.action_url || !redirectForm?.fields) {
+          throw new Error('ACLEDA did not provide a payment session.');
+        }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = redirectForm.action_url;
+
+        Object.entries(redirectForm.fields).forEach(([name, value]) => {
+          const field = document.createElement('input');
+          field.type = 'hidden';
+          field.name = name;
+          field.value = String(value ?? '');
+          form.appendChild(field);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+        return;
+      }
+
+      if (paymentMethod === 'acleda_khqr') {
+        // The bank returns the KHQR payload; it is encoded in this browser so
+        // it is never sent to an image-rendering service.
+        const response = await api.post('/acleda/qr-session', payload);
+        if (!response?.transaction_id || !response?.qr_value) {
+          throw new Error('ACLEDA did not provide a KHQR payment session.');
+        }
+
+        const qrImage = await QRCode.toDataURL(response.qr_value, {
+          width: 320,
+          margin: 2,
+          errorCorrectionLevel: 'M',
+        });
+
+        setKhqrSession({ ...response, qrImage });
+        setPaymentStatus('Waiting for verified payment confirmationâ€¦');
+
+        const pollingStartedAt = Date.now();
+        const pollStatus = async () => {
+          try {
+            const donation = await api.get(`/acleda/donations/${response.transaction_id}/status`);
+            if (donation.status === 'completed') {
+              navigate(`/donate-payment/received/${response.transaction_id}`, {
+                state: { paymentVerified: true },
+              });
+              return;
+            }
+            if (donation.status === 'failed') {
+              setPaymentStatus('The payment was not completed. Please try again.');
+              return;
+            }
+          } catch {
+            // Keep the QR visible; temporary network failures must not be
+            // reported as a failed bank payment.
+          }
+
+          if (Date.now() - pollingStartedAt < 15 * 60 * 1000) {
+            window.setTimeout(pollStatus, 3000);
+          } else {
+            setPaymentStatus('Payment confirmation timed out. Please check your transaction before trying again.');
+          }
+        };
+
+        window.setTimeout(pollStatus, 3000);
+        return;
+      }
+
       const res = await api.post('/donations', payload);
 
       const paymentMethodLabels = {
@@ -112,6 +187,19 @@ export default function Payment() {
   return (
     <div className="min-h-screen px-4 py-10 font-sans bg-slate-50 text-slate-700">
       <div className="max-w-5xl mx-auto space-y-8">
+        {khqrSession && (
+          <section className="mx-auto max-w-md rounded-xl border border-slate-200 bg-white p-6 text-center shadow-xs">
+            <span className="rounded bg-red-600 px-2 py-1 text-xs font-bold text-white">ACLEDA PAY KHQR</span>
+            <h1 className="mt-4 text-2xl font-semibold text-slate-900">Complete your donation</h1>
+            <p className="mt-2 text-sm text-slate-600">Scan this code with your bank app. We will show your receipt only after ACLEDA verifies the payment.</p>
+            <img src={khqrSession.qrImage} alt="ACLEDA KHQR payment code" className="mx-auto mt-5 w-full max-w-xs rounded-lg border border-slate-200" />
+            <p className="mt-4 text-lg font-bold text-slate-900">${Number(contribution || 0).toFixed(2)} USD</p>
+            <p className="mt-2 text-xs text-slate-500">Transaction: {khqrSession.transaction_id}</p>
+            <p className="mt-4 text-sm font-medium text-amber-700" role="status">{paymentStatus}</p>
+          </section>
+        )}
+
+        {!khqrSession && <>
         <div>
           <h1 className="text-3xl font-light tracking-tight text-slate-900">Checkout</h1>
           <p className="mt-1 text-xs text-slate-500">Complete your contribution to support this cause.</p>
@@ -322,7 +410,7 @@ export default function Payment() {
 
                 {paymentMethod === 'bank_transfer' && (
                   <div className="space-y-1.5 rounded-lg border border-slate-200 bg-slate-50 p-4 text-xs leading-relaxed text-slate-600">
-                    <p className="font-bold text-slate-800">CAMBODIAN AMANAH TAKAFUL ASSOCIATION – CATA</p>
+                    <p className="font-bold text-slate-800">CAMBODIAN AMANAH TAKAFUL ASSOCIATION ï¿½ CATA</p>
                     <p><span className="font-medium">Contact:</span> Mr. Saman Sen</p>
                     <p><span className="font-medium">Phone:</span> +855 89 333 782 / +855 69 939 398</p>
                     <p><span className="font-medium">Email:</span> sensaman@takafulcambodia.org</p>
@@ -359,6 +447,18 @@ export default function Payment() {
                 </label>
               </div>
 
+              {paymentMethod === 'acleda_khqr' && (
+                <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs leading-relaxed text-red-800">
+                  Select KHQR here, then click Donate Now to create a secure, time-limited ACLEDA payment QR code.
+                </p>
+              )}
+
+              {paymentMethod === 'acleda_card' && (
+                <p className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-xs leading-relaxed text-blue-800">
+                  You will be securely redirected to ACLEDA PAY to complete your card payment.
+                </p>
+              )}
+
               <div className="pt-2">
                 <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer border-slate-200 bg-slate-50">
                   <input
@@ -376,11 +476,12 @@ export default function Payment() {
                 disabled={loading}
                 className="w-full rounded-md bg-[#7A4B92] py-3 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#683e7d] disabled:opacity-50"
               >
-                {loading ? 'Processing Donation...' : 'Donate Now'}
+                {loading ? 'Connecting to ACLEDA...' : paymentMethod === 'acleda_card' ? 'Pay by Card' : 'Donate Now'}
               </button>
             </div>
           </div>
         </form>
+        </>}
       </div>
     </div>
   );

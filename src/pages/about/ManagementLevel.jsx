@@ -1,49 +1,17 @@
-import React from 'react';
-import manage1 from '../../assets/image/datuk_OH.png';
-import manage2 from '../../assets/image/manage.jpg';
-import manage3 from '../../assets/image/manage2.jpg';
-import manage4 from '../../assets/image/boss.png';
-import manage5 from '../../assets/image/sariah4.jpg';
-
-const managementMembers = [
-  {
-    id: 1,
-    name: 'Neak Oknha Datuk Dr. Othsman Hassan',
-    title: 'Chair of Board Director',
-    image: manage1,
-    bio: "Provides overall leadership, chairs meetings, and ensures the board's effectiveness in governance.",
-  },
-  {
-    id: 2,
-    name: 'His Excellency Mr. Sman Manan',
-    title: 'Vice Chair of Board Director',
-    image: manage2,
-    bio: 'Supports the Chair, steps in when the Chair is unavailable, and may oversee specific projects or initiatives and collaborate with partners/donors overseas.',
-  },
-  {
-    id: 3,
-    name: 'His Excellency Mr. Rofy Othsman',
-    title: 'Vice Chair of Board Director',
-    image: manage3,
-    bio: 'Supports the Chair, steps in when the Chair is unavailable, and may oversee specific projects or initiatives and leading The Muslim Youth Cambodia.',
-  },
-  {
-    id: 4,
-    name: 'Mr. Saman SEN',
-    title: 'Executive Director',
-    image: manage4,
-    bio: "Manages day-to-day CATA's operations, leads the strategic implementation of programs, and reports to the board.",
-  },
-  {
-    id: 5,
-    name: 'Her Excellency Mrs. Loh Saroh',
-    title: 'Board Members (Treasurer)',
-    image: manage5,
-    bio: "Oversees the association's financial health, including budgeting, audits, and financial reporting.",
-  },
-];
+import React, { useEffect, useState } from 'react';
+import { api, toAssetUrl } from '../../utils/api.js';
 
 export default function CATAManagementLevel() {
+  const [managementMembers, setManagementMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.get('/management_members')
+      .then((members) => setManagementMembers(Array.isArray(members) ? members : []))
+      .catch(() => setManagementMembers([]))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="min-h-screen font-sans bg-slate-50 text-slate-800">
       {/* ===== HERO BANNER SECTION ===== */}
@@ -67,6 +35,8 @@ export default function CATAManagementLevel() {
       {/* ===== MAIN CONTENT AREA ===== */}
       <main className="max-w-5xl px-4 py-12 mx-auto sm:py-16">
         <div className="space-y-8">
+          {loading && <p className="py-8 text-center text-slate-500">Loading management members...</p>}
+          {!loading && managementMembers.length === 0 && <p className="py-8 text-center text-slate-500">No management members are available yet.</p>}
           {managementMembers.map((member) => (
             <div
               key={member.id}
@@ -75,11 +45,13 @@ export default function CATAManagementLevel() {
               <div className="flex flex-col items-center gap-6 md:flex-row md:items-center">
                 {/* MEMBER IMAGE */}
                 <div className="w-full md:w-64 h-60 shrink-0 overflow-hidden rounded-2xl bg-slate-100">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="object-cover w-full h-full"
-                  />
+                  {member.image ? (
+                    <img src={toAssetUrl(member.image)} alt={member.name} className="object-cover w-full h-full" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-sky-100 text-5xl font-bold text-sky-600" aria-label={`${member.name} photo pending`}>
+                      {member.name?.charAt(0)}
+                    </div>
+                  )}
                 </div>
 
                 {/* MEMBER CONTENT */}

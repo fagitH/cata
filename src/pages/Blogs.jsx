@@ -12,9 +12,15 @@ export default function CATABlogsPage() {
   useEffect(() => {
     async function loadVideos() {
       setLoading(true);
-      const videos = await fetchCataVideos();
-      setBlogs(videos || []);
-      setLoading(false);
+      try {
+        const videos = await fetchCataVideos();
+        setBlogs(videos || []);
+      } catch (error) {
+        console.error('Failed to load CATA videos:', error);
+        setBlogs([]);
+      } finally {
+        setLoading(false);
+      }
     }
     loadVideos();
   }, []);

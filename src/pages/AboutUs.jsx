@@ -135,24 +135,6 @@ const coreObjectives = [
   "Boost the Islamic economy in Cambodia",
   "Foster unity and resilience within the Muslim community",
 ];
-const learnMoreLinks = [
-  { label: 'About us', href: '/about-us' },
-  { label: 'Partner', href: '/partner' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Annual Report', href: '/category/annual-report' },
-  { label: 'Contact us', href: '/contact-us' },
-  { label: 'Privacy Policy', href: '/privacy-policy-2' },
-  { label: 'Terms & Refunds', href: '/terms-and-conditions' },
-]
-
-const socialLinks = [
-  { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=100088893735790' },
-  { label: 'Twitter', href: 'https://twitter.com/home' },
-  { label: 'Youtube', href: 'https://www.youtube.com/channel/UCwbNKD6eeq_zE5Zz8EpznDg' },
-  { label: 'Telegram', href: 'https://t.me/amanahtakafulassociation' },
-  { label: 'Instagram', href: '#' },
-]
-
 export default function AboutUs() {
   return (
     <div className="min-h-screen bg-white text-slate-800">

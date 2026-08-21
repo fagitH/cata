@@ -6,5 +6,6 @@ export const routes = [
   { path: '/contact', label: 'Contact' },
   { path: '/partnership', label: 'Partnership' },
   { path: '/annual-reports', label: 'Annual Reports' },
+  { path: '/news-letter', label: 'Newsletter' },
   { path: '/donate', label: 'Donate' },
 ]

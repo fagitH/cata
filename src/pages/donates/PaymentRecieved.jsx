@@ -1,13 +1,63 @@
-import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, Link, useParams } from 'react-router-dom';
+import { api } from '../../utils/api';
 
 function OrderReceived() {
   const location = useLocation();
+  const { id } = useParams();
+  const [savedDonation, setSavedDonation] = useState(null);
+  const [verificationMessage, setVerificationMessage] = useState('');
+
+  useEffect(() => {
+    if (!id) return;
+    api.get(`/donations/${id}`).then(setSavedDonation).catch(() => setSavedDonation(null));
+  }, [id]);
+
+  useEffect(() => {
+    if (!id || !['acleda_khqr', 'acleda_card'].includes(savedDonation?.payment_method) || savedDonation.status === 'completed') {
+      return undefined;
+    }
+
+    let cancelled = false;
+    const startedAt = Date.now();
+    const verify = async () => {
+      try {
+        const donation = await api.get(`/acleda/donations/${id}/status`);
+        if (cancelled) return;
+        setSavedDonation(donation);
+        if (donation.status === 'failed') {
+          setVerificationMessage('The payment was not completed.');
+          return;
+        }
+      } catch {
+        if (!cancelled) setVerificationMessage('Waiting to verify the payment with ACLEDA…');
+      }
+
+      if (!cancelled && Date.now() - startedAt < 15 * 60 * 1000) {
+        window.setTimeout(verify, 3000);
+      }
+    };
+
+    setVerificationMessage('Verifying your payment with ACLEDA…');
+    verify();
+    return () => { cancelled = true; };
+  }, [id, savedDonation?.payment_method, savedDonation?.status]);
 
   // Purely dynamic state extraction without static hardcoded defaults
   const orderData = location.state;
+  const savedAddress = savedDonation?.donor_address;
+  const savedBillingLines = savedDonation ? [
+    savedDonation.donor_name,
+    savedAddress?.company,
+    savedAddress?.street1,
+    savedAddress?.street2,
+    [savedAddress?.city, savedAddress?.state, savedAddress?.postcode].filter(Boolean).join(', '),
+    savedAddress?.country,
+    savedDonation.donor_phone ? `Phone: ${savedDonation.donor_phone}` : '',
+    savedDonation.donor_email ? `Email: ${savedDonation.donor_email}` : '',
+  ].filter(Boolean) : [];
 
-  if (!orderData) {
+  if (!orderData && !savedDonation) {
     return (
       <div className="max-w-4xl p-10 mx-auto text-center text-slate-600">
         <p>No order details found.</p>
@@ -18,14 +68,28 @@ function OrderReceived() {
     );
   }
 
-  const {
-    donationNumber,
-    date,
-    total,
-    paymentMethod,
-    itemTitle,
-    billingDetails,
-  } = orderData;
+  const donationNumber = savedDonation?.transaction_id || orderData?.donationNumber || id;
+  const date = orderData?.date || (savedDonation?.created_at ? new Date(savedDonation.created_at).toLocaleDateString() : '');
+  const total = orderData?.total || `$${Number(savedDonation?.amount || 0).toFixed(2)}`;
+  const paymentMethod = orderData?.paymentMethod || savedDonation?.payment_method || '';
+  const itemTitle = orderData?.itemTitle || savedDonation?.campaign_title || 'Donation';
+  const billingDetails = orderData?.billingDetails || { lines: savedBillingLines };
+  const isAcledaPayment = ['acleda_khqr', 'acleda_card'].includes(savedDonation?.payment_method);
+  const isVerified = savedDonation?.status === 'completed';
+
+  if (isAcledaPayment && !isVerified) {
+    return (
+      <div className="min-h-screen bg-slate-50 px-4 py-16 font-sans text-slate-800">
+        <main className="mx-auto max-w-md rounded-xl border border-slate-200 bg-white p-8 text-center shadow-xs">
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-[#7A4B92]" />
+          <h1 className="mt-5 text-2xl font-semibold">Confirming payment</h1>
+          <p className="mt-3 text-sm text-slate-600">{verificationMessage || 'Waiting for ACLEDA to verify this payment…'}</p>
+          <p className="mt-5 text-xs text-slate-500">Transaction: {donationNumber}</p>
+          {savedDonation?.status === 'failed' && <Link to="/donate" className="mt-6 inline-block text-sm font-semibold text-[#7A4B92] underline">Return to donate</Link>}
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen font-sans bg-white text-slate-800">
