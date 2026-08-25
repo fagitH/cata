@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        if (!Schema::hasTable('admin_users')) {
+            Schema::create('admin_users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('email')->unique();
+                $table->string('password');
+                $table->string('role')->default('admin');
+                $table->text('token_hash')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        $email = env('ADMIN_EMAIL');
+        $password = env('ADMIN_PASSWORD');
+        if ($email && $password && !\App\Models\AdminUser::where('email', $email)->exists()) {
+            \App\Models\AdminUser::create([
+                'name' => env('ADMIN_NAME', 'CATA Administrator'),
+                'email' => $email,
+                'password' => Hash::make($password),
+                'role' => 'super_admin',
+            ]);
+        }
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('admin_users');
+    }
+};
