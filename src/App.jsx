@@ -27,6 +27,8 @@ import UsersAdmin from './admin/pages/UsersAdmin.jsx'
 import SecretariatAdmin from './admin/pages/SecretariatAdmin.jsx'
 import ManagementAdmin from './admin/pages/ManagementAdmin.jsx'
 import ShariahAdvisoryAdmin from './admin/pages/ShariahAdvisoryAdmin.jsx'
+import PartnersAdmin from './admin/pages/PartnersAdmin.jsx'
+import ScholarshipsAdmin from './admin/pages/ScholarshipsAdmin.jsx'
 import { api } from './utils/api.js'
 
 import Report from './pages/annual_report/Reports.jsx'
@@ -38,6 +40,7 @@ import Zakat from './pages/donates/Zakat.jsx'
 import Sadakah from './pages/donates/Sadakah.jsx'
 import UmrahHajj from './pages/donates/UmrahHajj.jsx'
 import WaterWell from './pages/donates/WaterWell.jsx'
+import WaterWellProject from './pages/donates/WaterWellProject.jsx'
 import Mosque from './pages/donates/Mosque.jsx'
 import School from './pages/donates/School.jsx'
 import PlantTree from './pages/donates/PlantTree.jsx'
@@ -120,6 +123,8 @@ function App() {
             <Route path="secretariat" element={<SecretariatAdmin />} />
             <Route path="management" element={<ManagementAdmin />} />
             <Route path="shariah-advisory" element={<ShariahAdvisoryAdmin />} />
+            <Route path="partners" element={<PartnersAdmin />} />
+            <Route path="scholarships" element={<ScholarshipsAdmin />} />
             <Route path="users" element={<SuperAdminOnly><UsersAdmin /></SuperAdminOnly>} />
           </Route>
         </Route>
@@ -150,6 +155,7 @@ function App() {
           <Route path="/donate-sadakah" element={<Sadakah />} />
           <Route path="/donate-umrah-hajj" element={<UmrahHajj />} />
           <Route path="/donate-water-well" element={<WaterWell />} />
+          <Route path="/water-well-project" element={<WaterWellProject />} />
           <Route path="/donate-mosque" element={<Mosque />} />
           <Route path="/donate-school" element={<School />} />
           <Route path="/donate-Plant" element={<PlantTree />} />

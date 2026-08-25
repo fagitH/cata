@@ -76,11 +76,12 @@ export default function DataManagerWithFiles({
 
       const submitData = new FormData();
 
-      // Add form fields to FormData
-      Object.keys(normalizedFormData).forEach((key) => {
-        // Skip file fields - we'll add them separately
-        if (!allFileFields.some(ff => ff.name === key)) {
-          submitData.append(key, normalizedFormData[key]);
+      // Send only fields rendered by this form. Editing begins with the full
+      // API record, which may contain nullable database-only fields.
+      formFields.forEach((field) => {
+        const value = normalizedFormData[field.key];
+        if (value !== undefined && value !== null) {
+          submitData.append(field.key, value);
         }
       });
 

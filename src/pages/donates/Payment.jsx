@@ -14,7 +14,7 @@ export default function Payment() {
   const initialAmount = location.state?.amount || (queryAmount ? parseFloat(queryAmount) : 1.0);
 
   const [contribution, setContribution] = useState(initialAmount);
-  const [paymentMethod, setPaymentMethod] = useState('bank_transfer');
+  const [paymentMethod, setPaymentMethod] = useState(location.state?.paymentMethod || 'bank_transfer');
   const [captchaChecked, setCaptchaChecked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [khqrSession, setKhqrSession] = useState(null);
@@ -32,6 +32,7 @@ export default function Payment() {
     postcode: '',
     phone: '',
     email: '',
+    ...(location.state?.donorDetails || {}),
   });
 
   const handleInputChange = (e) => {

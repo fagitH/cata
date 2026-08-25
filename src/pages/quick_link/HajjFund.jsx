@@ -3,7 +3,7 @@ import React from 'react';
 // ==========================================
 // REPLACE THIS IMPORT WITH YOUR ACTUAL BANNER IMAGE
 // ==========================================
-// import hajjBannerImg from '../assets/hajj-fund-banner.jpg';
+ import hajjBannerImg from '../../assets/image/hajj_fund/banner.jpg';
 
 export default function HajjFundCambodia() {
   const operatingPrinciples = [
@@ -21,26 +21,14 @@ export default function HajjFundCambodia() {
         <div className="relative overflow-hidden rounded-2xl shadow-md border border-slate-200 bg-white">
           
           {/* Banner Image Display */}
-          <div className="relative w-full aspect-[21/9] max-h-[380px] overflow-hidden flex items-center justify-center bg-slate-100">
+          <div className="relative w-full aspect-[21/9] max-h-[350px] overflow-hidden flex items-center justify-center bg-slate-100">
             <img
-              src="https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?q=80&w=1200&auto=format&fit=crop"
-              alt="Hajj Fund Cambodia Banner"
-              className="w-full h-full object-cover"
-            />
-            {/* 
-              Note: When using your local image asset, replace the src with:
               src={hajjBannerImg}
-            */}
+              alt="Hajj Fund Cambodia Banner"
+              className="w-full h-full "
+            />
 
-            {/* Banner Text Overlay Simulation */}
-            <div className="absolute inset-0 bg-black/20 flex flex-col justify-center items-end p-6 sm:p-12 text-right">
-              <h1 className="text-3xl sm:text-6xl font-black text-white drop-shadow-lg tracking-wide uppercase italic">
-                Hajj Fund
-              </h1>
-              <h2 className="text-3xl sm:text-6xl font-black text-sky-400 drop-shadow-lg tracking-wide uppercase italic -mt-1 sm:-mt-2">
-                Cambodia
-              </h2>
-            </div>
+
           </div>
 
         </div>

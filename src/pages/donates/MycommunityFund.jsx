@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getRelatedProjects } from '../../data/donationProjects';
+import communityFund from '../../assets/image/donation/community_fund.jpg';   
 
 function MyCommunityFunds() {
   const [amount, setAmount] = useState('1');
@@ -64,7 +65,7 @@ function MyCommunityFunds() {
           {/* LEFT: MAIN IMAGE WITH ZOOM ICON */}
           <div className="relative group">
             <img
-              src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=800&auto=format&fit=crop"
+              src={communityFund}
               alt={campaignTitle}
               className="object-cover w-full h-auto border shadow-xs rounded-xs border-slate-100"
             />

@@ -21,9 +21,9 @@ export default function ReportsAdmin() {
     slug: '',
     description: '',
     year: '',
-    image: '',
+    // image: '',
   });
-  const [reportFiles, setReportFiles] = useState({ image: null });
+  // const [reportFiles, setReportFiles] = useState({ image: null });
   const [detailMessage, setDetailMessage] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [showDetailEditor, setShowDetailEditor] = useState(false);
@@ -59,13 +59,13 @@ export default function ReportsAdmin() {
     { key: 'year', label: 'Year', type: 'number' },
   ];
 
-  const fileFields = [
-    {
-      name: 'image',
-      label: 'Cover Image',
-      accept: 'image/*',
-    },
-  ];
+  // const fileFields = [
+  //   {
+  //     name: 'image',
+  //     label: 'Cover Image',
+  //     accept: 'image/*',
+  //   },
+  // ];
 
   const handleSelectReport = (report) => {
     setSelectedId(report?.id ?? null);
@@ -75,7 +75,7 @@ export default function ReportsAdmin() {
       slug: report?.slug || '',
       description: report?.description || '',
       year: report?.year || '',
-      image: report?.image || '',
+      // image: report?.image || '',
     });
   };
 
@@ -97,7 +97,7 @@ export default function ReportsAdmin() {
           slug: '',
           description: '',
           year: '',
-          image: '',
+          // image: '',
         });
       }
     } catch (error) {
@@ -114,10 +114,10 @@ export default function ReportsAdmin() {
     setDetailForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleReportFileChange = (event, fieldName) => {
-    const file = event.target.files && event.target.files[0] ? event.target.files[0] : null;
-    setReportFiles((prev) => ({ ...prev, [fieldName]: file }));
-  };
+  // const handleReportFileChange = (event, fieldName) => {
+  //   const file = event.target.files && event.target.files[0] ? event.target.files[0] : null;
+  //   setReportFiles((prev) => ({ ...prev, [fieldName]: file }));
+  // };
 
   const handleDetailSubmit = async (event) => {
     event.preventDefault();
@@ -144,12 +144,12 @@ export default function ReportsAdmin() {
         }
       });
 
-      if (reportFiles.image) {
-        formData.set('image', reportFiles.image);
-      }
+      // if (reportFiles.image) {
+      //   formData.set('image', reportFiles.image);
+      // }
 
       await api.put(`/annual_reports/${selectedId}`, formData);
-      setReportFiles({ image: null });
+      // setReportFiles({ image: null });
       setDetailMessage({ type: 'success', text: 'Annual report detail saved successfully.' });
       await fetchReportList();
     } catch (error) {
@@ -166,7 +166,7 @@ export default function ReportsAdmin() {
         endpoint="annual_reports"
         columns={columns}
         formFields={formFields}
-        fileFields={fileFields}
+        // fileFields={fileFields}
       />
 
       {showDetailEditor && (
@@ -257,7 +257,7 @@ export default function ReportsAdmin() {
                     />
                   </div>
 
-                  <div className="md:col-span-2">
+                  {/* <div className="md:col-span-2">
                     <label className="block text-sm font-medium mb-1">Replace Report Image</label>
                     <input
                       type="file"
@@ -268,7 +268,7 @@ export default function ReportsAdmin() {
                     {reportFiles.image && (
                       <p className="mt-2 text-sm text-green-400">Selected image: {reportFiles.image.name}</p>
                     )}
-                  </div>
+                  </div> */}
                 </div>
 
                 {detailMessage && (

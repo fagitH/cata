@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getRelatedProjects } from '../../data/donationProjects';
+import education from '../../assets/image/donation/educat.jpg';
 
 function Education() {
   const navigate = useNavigate();
@@ -62,15 +63,17 @@ function Education() {
       <section className="max-w-6xl px-4 py-6 mx-auto">
         <div className="grid items-start grid-cols-1 gap-8 md:grid-cols-2">
           {/* LEFT: MAIN IMAGE */}
-          <div className="relative group">
-            <img
-              src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800&auto=format&fit=crop"
-              alt="Orphan Support"
-              className="object-cover w-full h-auto border shadow-xs rounded-xs border-slate-100"
-            />
+          <div className="relative overflow-hidden group rounded-md border border-slate-100 shadow-xs bg-slate-100">
+            <div className="w-full aspect-4/3 sm:h-96">
+              <img
+                src={education}
+                alt={campaign.title}
+                className="object-cover object-top w-full h-full transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
             <button
               type="button"
-              className="absolute p-2 transition-colors bg-white rounded-full shadow-md top-3 right-3 text-slate-600 hover:text-black"
+              className="absolute p-2 transition-colors bg-white/90 rounded-full shadow-md top-3 right-3 text-slate-600 hover:text-black hover:bg-white"
               title="Zoom Image"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,11 +185,11 @@ function Education() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {relatedProjects.map((item) => (
             <div key={item.id} className="flex flex-col items-start justify-between space-y-3">
-              <div className="w-full overflow-hidden aspect-square bg-slate-100">
+              <div className="w-full overflow-hidden rounded-md aspect-square bg-slate-100">
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="object-cover w-full h-full"
+                  className="object-cover object-top w-full h-full"
                 />
               </div>
 

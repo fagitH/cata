@@ -1,29 +1,31 @@
 import React from 'react';
-import heroBgImageDefault from '../../assets/image/admin-ajax.jpg';
+import bgImage from '../../assets/image/pattern.png';
 import cataLogoImage from '../../assets/image/Cata_logo.jpg';
 
-function GovernanceStructuralOfCATA({ heroBgImage = heroBgImageDefault }) {
+const GovernanceStructuralOfCATA = () => {
   return (
-    <div className="min-h-screen font-sans bg-slate-50 text-slate-900">
+    <div className="min-h-screen font-sans text-slate-800">
       {/* ===== HERO HEADER SECTION WITH BACKGROUND IMAGE ===== */}
-      <section className="relative py-16 overflow-hidden text-white sm:py-20">
-        <img
-          src={heroBgImage}
-          alt="CATA Banner Background"
-          className="absolute inset-0 object-cover w-full h-full"
-        />
-        <div className="absolute inset-0 bg-black/10" />
+      <section
+        className="relative px-4 bg-center py-14"
+        style={{ backgroundImage: `url(${bgImage})` }}
+      >
+        {/* Light Overlay */}
+        <div className="absolute inset-0 pointer-events-none bg-white/55" />
 
-        <div className="relative z-10 px-4 mx-auto text-center max-w-7xl sm:px-6 lg:px-8">
-          <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[11px] sm:text-xs font-semibold tracking-widest uppercase border rounded-full bg-black/20 border-amber-400/50 text-amber-300 backdrop-blur-xs">
+        {/* Decorative Grid Pattern Overlay */}
+        <div className="absolute inset-0 pointer-events-none opacity-100  [background-size:16px_16px]" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[11px] sm:text-xs font-semibold tracking-widest uppercase border rounded-full bg-black/20 border-amber-400/50 text-amber-300 backdrop-blur-xs">
             <span>Official Governance Structure</span>
-          </div>
+          </div> */}
 
-          <h1 className="text-3xl font-extrabold tracking-tight text-sky-600 sm:text-5xl">
+          <h1 className="text-3xl font-extrabold tracking-tight text-sky-600 sm:text-6xl">
             Governance Structure of CATA
           </h1>
 
-          <p className="max-w-3xl mx-auto mt-4 text-sm leading-relaxed sm:text-base text-slate-100">
+          <p className="max-w-3xl mx-auto mt-4 text-sm leading-relaxed sm:text-base text-sky-600">
             The governance framework of CATA is centered around the General Assembly, supported by
             specialized advisory bodies, executive leadership, and operational committees to guarantee
             Shariah compliance and strategic execution.
@@ -185,6 +187,6 @@ function GovernanceStructuralOfCATA({ heroBgImage = heroBgImageDefault }) {
       </section>
     </div>
   );
-}
+};
 
 export default GovernanceStructuralOfCATA;

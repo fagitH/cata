@@ -1,4 +1,12 @@
 import React from 'react';
+import donate1 from '../assets/image/donation/donate1.jpg'
+import donate2 from '../assets/image/donation/donate2.jpg'
+import donate3 from '../assets/image/donation/donate3.jpg'
+import donate4 from '../assets/image/donation/donate4.jpg'
+import donate5 from '../assets/image/donation/donate5.jpg'
+import donate6 from '../assets/image/donation/donate6.jpg'
+import donate7 from '../assets/image/donation/donate7.png'
+import donate8 from '../assets/image/donation/donate8.webp'
 
 export default function DonationCategoriesPage() {
   const donationCategories = [
@@ -6,56 +14,56 @@ export default function DonationCategoriesPage() {
       id: 1,
       title: 'Zakat',
       percentage: 20,
-      image: '/images/zakat.jpg',
+      image: donate7,
       donateUrl: '/donate-zakat',
     },
     {
       id: 2,
       title: 'Sadaqah Jariyah',
       percentage: 30,
-      image: '/images/sadaqah.jpg',
+      image: donate6,
       donateUrl: '/donate-sadakah',
     },
     {
       id: 3,
       title: 'Orphan Support',
       percentage: 16,
-      image: '/images/orphan.jpg',
+      image:donate1,
       donateUrl: '/donate-education',
     },
     {
       id: 4,
       title: 'Education/Orphan/Poors',
       percentage: 8,
-      image: '/images/education.jpg',
+      image: donate2,
       donateUrl: '/donate-education',
     },
     {
       id: 5,
       title: 'Food Packages (Ramadan/Qurban)',
       percentage: 61,
-      image: '/images/food-packages.jpg',
+      image: donate3,
       donateUrl: '/donate-ramadhan',
     },
     {
       id: 6,
       title: 'Water Well / Toilet',
       percentage: 50,
-      image: '/images/water-well.jpg',
+      image: donate4,
       donateUrl: '/donate-water-well',
     },  
     {
       id: 7,
       title: 'Mosque / School / House',
       percentage: 7,
-      image: '/images/food-packages.jpg',
+      image: donate5,
       donateUrl: '/donate-mosque',
     },
     {
       id: 8,
       title: 'Umrah / Hajj',
       percentage: 21,
-      image: '/images/water-well.jpg',
+      image: donate8,
       donateUrl: '/donate-umrah-hajj',
     },
   ];
@@ -129,11 +137,11 @@ export default function DonationCategoriesPage() {
 
         {/* Banner Content */}
         <div className="relative z-10 flex flex-col items-center max-w-4xl mx-auto text-center">
-          <span className="inline-block px-4 py-1 mb-3 text-xs font-semibold tracking-widest uppercase border rounded-full bg-amber-500/10 border-amber-400/30 text-amber-300 backdrop-blur-sm">
+          {/* <span className="inline-block px-4 py-1 mb-3 text-xs font-semibold tracking-widest uppercase border rounded-full bg-amber-500/10 border-amber-400/30 text-amber-300 backdrop-blur-sm">
             CATA GIVING
-          </span>
+          </span> */}
 
-          <h1 className="text-3xl font-extrabold tracking-tight text-white uppercase sm:text-5xl drop-shadow-sm">
+          <h1 className="text-3xl font-extrabold tracking-tight text-sky-600 sm:text-6xl uppercase drop-shadow-sm">
             Donation Categories
           </h1>
 

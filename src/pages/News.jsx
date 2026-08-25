@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, toAssetUrl } from '../utils/api';
-
+import newsBanner from '../assets/image/news/banner.jpg';
 const getImageUrl = (url) => {
   if (!url) return '/placeholder.png';
   return toAssetUrl(url);
@@ -54,18 +54,18 @@ export default function CATANewsBlogPage() {
 
   return (
     <div className="min-h-screen font-sans bg-slate-50 text-slate-800">
-      <section className="relative text-white py-20 sm:py-28 px-4 overflow-hidden flex items-center justify-center min-h-[320px]">
+      <section className="relative text-white py-20 sm:py-28 px-4 overflow-hidden flex items-center justify-center min-h-[280px]">
         <img
-          src="/your-background-image.jpg"
+          src={newsBanner}
           alt="Hero Background"
           className="absolute inset-0 object-cover object-center w-full h-full"
         />
-        <div className="absolute inset-0 bg-[#0082da]/85 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-[#0082da]/70 " />
         <div className="relative z-10 flex flex-col items-center max-w-4xl mx-auto text-center">
           <h1 className="text-3xl font-extrabold tracking-wide text-white uppercase sm:text-5xl drop-shadow-sm">
             LATEST NEWS
           </h1>
-          <div className="w-28 h-[3px] bg-[#38bdf8] my-3 rounded-full shadow-sm" />
+          <div className="w-28 h-[3px] bg-[#22caf9] my-3 rounded-full shadow-sm" />
           <p className="text-base font-medium tracking-wide sm:text-lg text-white/95">
             Our Activities
           </p>

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getRelatedProjects } from '../../data/donationProjects';
+import zakat from '../../assets/image/donation/zakat.webp';
 
 function Zakat() {
   const [contribution, setContribution] = useState('1');
@@ -50,7 +51,7 @@ function Zakat() {
           {/* LEFT: MAIN IMAGE WITH ZOOM ICON */}
           <div className="relative group">
             <img
-              src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb0?q=80&w=800&auto=format&fit=crop"
+              src={zakat}
               alt={campaignTitle}
               className="object-cover w-full h-auto border shadow-xs rounded-xs border-slate-100"
             />

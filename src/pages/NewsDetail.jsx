@@ -251,17 +251,17 @@ export default function NewsDetail() {
         {/* Main Card */}
         <div className="overflow-hidden rounded-[2rem] bg-white shadow-sm border border-slate-200">
           {/* Main Featured Image */}
-          <div className="relative w-full aspect-video bg-slate-100 sm:aspect-[16/9] lg:aspect-[2/1]">
-            <img
-              src={getImageUrl(mainCover)}
-              alt={article.title}
-              className="object-cover w-full h-full"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = '/placeholder.png';
-              }}
-            />
-          </div>
+          <div className="relative w-full aspect-video bg-slate-100 sm:aspect-[16/9] lg:aspect-[2/1] overflow-hidden">
+  <img
+    src={getImageUrl(mainCover)}
+    alt={article.title}
+    className="object-cover object-center w-full h-full"
+    onError={(e) => {
+      e.target.onerror = null;
+      e.target.src = '/placeholder.png';
+    }}
+  />
+</div>
 
           <div className="p-8 sm:p-10">
             <div className="flex flex-wrap items-center justify-between gap-3">

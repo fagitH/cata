@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import QRCode from 'qrcode';
 import banner from '../../assets/image/Banner_orphan.jpg';
+import { api } from '../../utils/api';
 
 function ZakatCalculator() {
   const navigate = useNavigate();
@@ -29,7 +31,9 @@ function ZakatCalculator() {
   // Form States
   const [contribution, setContribution] = useState('1.00');
   const [paymentMethod, setPaymentMethod] = useState('bank_transfer');
-  const [captchaChecked, setCaptchaChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [khqrSession, setKhqrSession] = useState(null);
+  const [paymentStatus, setPaymentStatus] = useState('');
   
   const [donorDetails, setDonorDetails] = useState({
     firstName: '',
@@ -44,12 +48,6 @@ function ZakatCalculator() {
     phone: '',
     email: ''
   });
-
-  const paymentMethodLabels = {
-    bank_transfer: 'Direct bank transfer',
-    acleda_khqr: 'ACLEDA PAY KHQR',
-    acleda_card: 'ACLEDA PAY Credit/Debit Card',
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -69,56 +67,115 @@ function ZakatCalculator() {
     if (currentStep > 1) setCurrentStep((prev) => prev - 1);
   };
 
-  const handleDonateSubmit = (e) => {
+  const handleDonateSubmit = async (e) => {
     e?.preventDefault();
 
-    if (!captchaChecked) {
-      alert("Please confirm you are not a robot.");
+    const amount = Number(contribution);
+    if (!Number.isFinite(amount) || amount < 1) {
+      alert('Please enter a valid contribution amount.');
       return;
     }
 
-    const dynamicOrderId = Math.floor(100000 + Math.random() * 900000).toString();
-    const currentDateFormatted = new Date().toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-    const formattedTotal = `$${parseFloat(contribution || 0).toFixed(2)}`;
-
-    const billingAddressLines = [
-      `${donorDetails.firstName} ${donorDetails.lastName}`.trim(),
-      donorDetails.companyName,
-      donorDetails.streetAddress1,
-      donorDetails.streetAddress2,
-      `${donorDetails.city}, ${donorDetails.state} ${donorDetails.postcode}`.trim(),
-      donorDetails.country,
-      donorDetails.phone,
-      donorDetails.email,
-    ].filter(Boolean);
-
-    navigate(`/donate-payment/received/${dynamicOrderId}`, {
-      state: {
-        donationNumber: dynamicOrderId,
-        date: currentDateFormatted,
-        total: formattedTotal,
-        paymentMethod: paymentMethodLabels[paymentMethod] || paymentMethod,
-        itemTitle: campaignTitle,
-        billingDetails: {
-          lines: billingAddressLines,
-        },
+    const payload = {
+      donor_name: `${donorDetails.firstName} ${donorDetails.lastName}`.trim(),
+      donor_email: donorDetails.email,
+      donor_phone: donorDetails.phone,
+      donor_address: {
+        company: donorDetails.companyName,
+        street1: donorDetails.streetAddress1,
+        street2: donorDetails.streetAddress2,
+        city: donorDetails.city,
+        state: donorDetails.state,
+        postcode: donorDetails.postcode,
+        country: donorDetails.country,
       },
-    });
+      amount,
+      payment_method: paymentMethod,
+      campaign_title: campaignTitle,
+    };
+
+    setLoading(true);
+    try {
+      if (paymentMethod === 'acleda_card') {
+        const response = await api.post('/acleda/card-session', payload);
+        if (!response?.redirect_form?.action_url || !response?.redirect_form?.fields) {
+          throw new Error('ACLEDA did not provide a payment session.');
+        }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = response.redirect_form.action_url;
+        Object.entries(response.redirect_form.fields).forEach(([name, value]) => {
+          const field = document.createElement('input');
+          field.type = 'hidden';
+          field.name = name;
+          field.value = String(value ?? '');
+          form.appendChild(field);
+        });
+        document.body.appendChild(form);
+        form.submit();
+        return;
+      }
+
+      if (paymentMethod === 'acleda_khqr') {
+        const response = await api.post('/acleda/qr-session', payload);
+        if (!response?.transaction_id || !response?.qr_value) {
+          throw new Error('ACLEDA did not provide a KHQR payment session.');
+        }
+
+        const qrImage = await QRCode.toDataURL(response.qr_value, {
+          width: 320,
+          margin: 2,
+          errorCorrectionLevel: 'M',
+        });
+        setKhqrSession({ ...response, qrImage });
+        setPaymentStatus('Waiting for verified payment confirmation...');
+
+        const pollingStartedAt = Date.now();
+        const pollStatus = async () => {
+          try {
+            const donation = await api.get(`/acleda/donations/${response.transaction_id}/status`);
+            if (donation.status === 'completed') {
+              navigate(`/donate-payment/received/${response.transaction_id}`, { state: { paymentVerified: true } });
+              return;
+            }
+            if (donation.status === 'failed') {
+              setPaymentStatus('The payment was not completed. Please try again.');
+              return;
+            }
+          } catch {
+            // Keep the QR visible while a temporary status request fails.
+          }
+
+          if (Date.now() - pollingStartedAt < 15 * 60 * 1000) {
+            window.setTimeout(pollStatus, 3000);
+          } else {
+            setPaymentStatus('Payment confirmation timed out. Please check your transaction before trying again.');
+          }
+        };
+
+        window.setTimeout(pollStatus, 3000);
+        return;
+      }
+
+      const donation = await api.post('/donations', payload);
+      navigate(`/donate-payment/received/${donation.transaction_id}`);
+    } catch (err) {
+      alert(err.message || 'Failed to process donation. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-[150px] font-sans bg-slate-50 text-slate-700">
   {/* ===== HERO BANNER ===== */}
-  <section className="relative w-full h-48 sm:h-54 md:h-80 bg-[#0a3b80] text-white flex items-center justify-center overflow-hidden">
+  <section className="relative w-full h-48 sm:h-54 md:h-80 bg-[#0d3c7e] text-white flex items-center justify-center overflow-hidden">
     {/* Background Image with Low Opacity */}
     <img
       src={banner}
       alt="Hero Background"
-      className="absolute inset-0 object-cover object-center w-full h-full pointer-events-none opacity-35"
+      className="absolute inset-0 object-cover object-center w-full h-full pointer-events-none opacity-95"
     />
   </section>
 
@@ -486,7 +543,19 @@ function ZakatCalculator() {
     )}
 
     {/* STEP 3: PAYMENT */}
-    {currentStep === 3 && (
+    {currentStep === 3 && khqrSession && (
+      <section className="max-w-md p-6 mx-auto text-center bg-white border shadow-xs rounded-xl border-slate-200">
+        <span className="px-2 py-1 text-xs font-bold text-white bg-red-600 rounded">ACLEDA PAY KHQR</span>
+        <h2 className="mt-4 text-2xl font-semibold text-slate-900">Complete your Zakat donation</h2>
+        <p className="mt-2 text-sm text-slate-600">Scan this code with your bank app to pay.</p>
+        <img src={khqrSession.qrImage} alt="ACLEDA KHQR payment code" className="w-full max-w-xs mx-auto mt-5 border rounded-lg border-slate-200" />
+        <p className="mt-4 text-lg font-bold text-slate-900">${Number(contribution || 0).toFixed(2)} USD</p>
+        <p className="mt-2 text-xs text-slate-500">Transaction: {khqrSession.transaction_id}</p>
+        <p className="mt-4 text-sm font-medium text-amber-700" role="status">{paymentStatus}</p>
+      </section>
+    )}
+
+    {currentStep === 3 && !khqrSession && (
       <form onSubmit={handleDonateSubmit} className="space-y-6">
         <div className="p-6 space-y-6 bg-white border rounded-lg shadow-xs border-slate-300 sm:p-8">
           
@@ -505,7 +574,7 @@ function ZakatCalculator() {
             </div>
           </div>
 
-          {/* RECAPTCHA BOX */}
+          {/* RECAPTCHA BOX
           <div className="inline-flex items-center gap-4 p-3 border rounded shadow-xs border-slate-300 bg-slate-50 w-fit">
             <label className="flex items-center gap-3 cursor-pointer">
               <input
@@ -528,7 +597,7 @@ function ZakatCalculator() {
                 <a href="#" className="hover:underline">Terms</a>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* PAYMENT METHODS */}
           <div className="pt-2 space-y-4">
@@ -617,9 +686,10 @@ function ZakatCalculator() {
           <div className="flex justify-end pt-2">
             <button
               type="submit"
+              disabled={loading}
               className="bg-[#7A4B92] hover:bg-[#683e7d] text-white text-sm font-semibold px-6 py-2 rounded shadow-xs transition-colors cursor-pointer"
             >
-              Donate now
+              {loading ? 'Connecting to ACLEDA...' : paymentMethod === 'acleda_card' ? 'Pay by Card' : 'Donate now'}
             </button>
           </div>
 

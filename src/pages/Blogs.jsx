@@ -54,10 +54,10 @@ export default function CATABlogsPage() {
 
   {/* Content Layer */}
   <div className="relative z-10 max-w-6xl mx-auto text-center">
-    <span className="inline-block px-4 py-1 mb-3 text-xs font-semibold tracking-widest uppercase border rounded-full bg-amber-500/10 border-amber-400/30 text-amber-300">
+    {/* <span className="inline-block px-4 py-1 mb-3 text-xs font-semibold tracking-widest uppercase border rounded-full bg-amber-500/10 border-amber-400/30 text-amber-300">
       CATA COMMUNITY
-    </span>
-    <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl drop-shadow-sm">
+    </span> */}
+    <h1 className="text-3xl font-extrabold tracking-tight uppercase text-sky-600 sm:text-6xl drop-shadow-sm">
       Blogs & Media
     </h1>
     <p className="max-w-2xl mx-auto mt-4 text-sm leading-relaxed sm:text-base text-slate-200">

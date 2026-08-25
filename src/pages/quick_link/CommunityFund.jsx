@@ -1,35 +1,89 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // ==========================================
-// REPLACE THESE IMPORTS WITH YOUR ACTUAL IMAGES
+// LOCAL IMAGE IMPORTS
 // ==========================================
 import cardFrontImg from '../../assets/image/community_fund/cardFront.jpg';
 import cardBackImg from '../../assets/image/community_fund/cardBack.png';
-// import featureHeroImg from '../assets/feature-hero.jpg';
-// import galleryImg1 from '../assets/gallery-1.jpg';
-// import galleryImg2 from '../assets/gallery-2.jpg';
-// ... etc.
+import featureHeroImg from '../../assets/image/community_fund/img1.jpg';
+import img01 from '../../assets/image/community_fund/img01.jpg';
+import img02 from '../../assets/image/community_fund/img02.jpg';
+import img03 from '../../assets/image/community_fund/img03.jpg';
+import img04 from '../../assets/image/community_fund/img04.jpg';
+import img05 from '../../assets/image/community_fund/img05.jpg';
+import img06 from '../../assets/image/community_fund/img06.jpg';
+import img07 from '../../assets/image/community_fund/img07.jpg';
+import img08 from '../../assets/image/community_fund/img08.jpg';
+import img09 from '../../assets/image/community_fund/img09.jpg';
+import img010 from '../../assets/image/community_fund/img010.jpg';
+import img011 from '../../assets/image/community_fund/img011.jpg';
+
+/* ---------------------------------------------------------------- */
+/*  Scroll Animation Helpers                                         */
+/* ---------------------------------------------------------------- */
+
+function useInView(threshold = 0.15) {
+  const ref = useRef(null)
+  const [inView, setInView] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true)
+          observer.unobserve(el)
+        }
+      },
+      { threshold }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [threshold])
+
+  return [ref, inView]
+}
+
+/* Custom Scale-Up Reveal Component (Small to Large) */
+function ScaleReveal({ children, className = '', delay = 0 }) {
+  const [ref, inView] = useInView()
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ease-out will-change-transform ${
+        inView 
+          ? 'opacity-100 scale-100' 
+          : 'opacity-0 scale-75'
+      } ${className}`}
+      style={{ transitionDelay: inView ? `${delay}ms` : '0ms' }}
+    >
+      {children}
+    </div>
+  )
+}
 
 export default function MyCommunityFund() {
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Placeholder images for the gallery section (Replace with your local asset imports)
+  // Gallery array linked to imported local assets
   const galleryImages = [
-    { id: 1, src: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=600&auto=format&fit=crop', alt: 'Hospital Support Visit' },
-    { id: 2, src: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb0?q=80&w=600&auto=format&fit=crop', alt: 'Official Signing Ceremony' },
-    { id: 3, src: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=600&auto=format&fit=crop', alt: 'Community Aid Handover' },
-    { id: 4, src: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=600&auto=format&fit=crop', alt: 'Relief Distribution' },
-    { id: 5, src: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?q=80&w=600&auto=format&fit=crop', alt: 'Community Meeting' },
-    { id: 6, src: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop', alt: 'Gathering & Support' },
-    { id: 7, src: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=600&auto=format&fit=crop', alt: 'Field Assistance' },
-    { id: 8, src: 'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?q=80&w=600&auto=format&fit=crop', alt: 'Document Verification' },
-    { id: 9, src: 'https://images.unsplash.com/photo-1546445317-29f4545f9d52?q=80&w=600&auto=format&fit=crop', alt: 'Ward Visit' },
-    { id: 10, src: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=600&auto=format&fit=crop', alt: 'Certificate Presentation 1' },
-    { id: 11, src: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb0?q=80&w=600&auto=format&fit=crop', alt: 'Certificate Presentation 2' },
+    { id: 1, src: img01, alt: 'Hospital Support Visit' },
+    { id: 2, src: img02, alt: 'Official Signing Ceremony' },
+    { id: 3, src: img03, alt: 'Community Aid Handover' },
+    { id: 4, src: img04, alt: 'Relief Distribution' },
+    { id: 5, src: img05, alt: 'Community Meeting' },
+    { id: 6, src: img06, alt: 'Gathering & Support' },
+    { id: 7, src: img07, alt: 'Field Assistance' },
+    { id: 8, src: img08, alt: 'Document Verification' },
+    { id: 9, src: img09, alt: 'Ward Visit' },
+    { id: 10, src: img010, alt: 'Certificate Presentation 1' },
+    { id: 11, src: img011, alt: 'Certificate Presentation 2' },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased pb-20">
+    <div className="min-h-screen pb-20 font-sans antialiased bg-slate-50 text-slate-800">
       
       {/* 3D FLIP CARD CSS STYLES */}
       <style>{`
@@ -49,26 +103,26 @@ export default function MyCommunityFund() {
       `}</style>
 
       {/* HEADER TITLE SECTION */}
-      <header className="bg-white border-b border-slate-200 py-10 px-4 text-center shadow-xs">
+      <header className="px-4 py-10 text-center bg-white border-b border-slate-200 shadow-xs">
         <div className="max-w-4xl mx-auto space-y-2">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-blue-700 uppercase">
+          <h1 className="text-3xl font-extrabold tracking-tight text-blue-700 uppercase sm:text-4xl">
             MY COMMUNITY FUND
           </h1>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-700 tracking-wide uppercase">
+          <h2 className="text-xl font-bold tracking-wide uppercase sm:text-2xl text-slate-700">
             SCHEME POLICY DOCUMENT
           </h2>
-          <span className="inline-block px-4 py-1 mt-2 text-sm font-semibold text-blue-600 bg-blue-50 border border-blue-200 rounded-full">
+          <span className="inline-block px-4 py-1 mt-2 text-sm font-semibold text-blue-600 border border-blue-200 rounded-full bg-blue-50">
             MEMBERSHIP PLUS (+)
           </span>
         </div>
       </header>
 
       {/* MAIN CONTENT CONTAINER */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 space-y-12">
+      <main className="max-w-5xl px-4 pt-10 mx-auto space-y-12 sm:px-6">
 
         {/* SECTION 1: GLOBAL LANDSCAPE */}
-        <section className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
-          <h2 className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-3">
+        <section className="p-6 bg-white border rounded-xl sm:p-8 border-slate-200/80 shadow-xs space-y-6">
+          <h2 className="pb-3 text-xl font-bold border-b text-slate-900 border-slate-100">
             Acknowledgment of the Global Landscape of Islamic Mutual Assistance
           </h2>
 
@@ -77,60 +131,60 @@ export default function MyCommunityFund() {
             <h3 className="text-base font-bold text-blue-800">
               A. Licensed Takaful Operators Worldwide
             </h3>
-            <p className="text-sm sm:text-base leading-relaxed text-slate-600 text-justify">
+            <p className="text-sm text-justify sm:text-base leading-relaxed text-slate-600">
               Globally, over 130 licensed takaful operators are predominantly concentrated in Gulf Cooperation Council (GCC) countries such as Saudi Arabia, UAE, Bahrain, Qatar, Oman, and Kuwait, along with countries like Malaysia, Indonesia, Pakistan, Sudan, and certain parts of Africa. These organizations generally operate under a Tabarru’ model, which is a donation-based risk pool that forms the foundation of Takaful Funds, Risk Funds, or Mutual Assistance Funds. This cooperative system allows community members to contribute to a collective fund aimed at assisting those in need, embodying the principles of solidarity and mutual aid inherent in Islamic finance.
             </p>
           </div>
 
           {/* PART B */}
-          <div className="space-y-3 pt-2">
+          <div className="pt-2 space-y-3">
             <h3 className="text-base font-bold text-blue-800">
               B. Informal Community-Based Tabarru’ Funds
             </h3>
-            <p className="text-sm sm:text-base leading-relaxed text-slate-600 text-justify">
+            <p className="text-sm text-justify sm:text-base leading-relaxed text-slate-600">
               Alongside structured takaful operators, numerous informal, community-based Tabarru’ pools operate through local mosques, Islamic NGOs, burial societies, community mutual aid groups, and Islamic cooperatives. Examples include:
             </p>
 
-            <ul className="space-y-3 pl-2 sm:pl-4 text-sm sm:text-base text-slate-600">
+            <ul className="pl-2 space-y-3 text-sm sm:pl-4 sm:text-base text-slate-600">
               <li className="flex items-start gap-2">
-                <span className="text-blue-600 font-bold mt-1">•</span>
+                <span className="mt-1 font-bold text-blue-600">•</span>
                 <span>
                   <strong className="text-slate-800">Malaysia:</strong> “Khairat kematian” funds provide community-based funeral aid, alleviating financial burdens during times of loss.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-600 font-bold mt-1">•</span>
+                <span className="mt-1 font-bold text-blue-600">•</span>
                 <span>
                   <strong className="text-slate-800">Indonesia:</strong> Baitul Mal wa Tamwil (BMT) cooperatives serve as microfinance institutions, facilitating financial support based on Islamic principles.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-600 font-bold mt-1">•</span>
+                <span className="mt-1 font-bold text-blue-600">•</span>
                 <span>
                   <strong className="text-slate-800">Pakistan and Nigeria:</strong> Community mutual aid efforts often manifest as burial societies and informal assistance networks, crucial in supporting families in need.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-600 font-bold mt-1">•</span>
+                <span className="mt-1 font-bold text-blue-600">•</span>
                 <span>
                   <strong className="text-slate-800">Somalia and the United Kingdom:</strong> Similar structures allow community members to pool resources for emergency relief and welfare support.
                 </span>
               </li>
             </ul>
 
-            <p className="text-sm sm:text-base leading-relaxed text-slate-600 pt-2 text-justify">
+            <p className="pt-2 text-sm text-justify sm:text-base leading-relaxed text-slate-600">
               These community-managed schemes typically operate within a non-profit framework, emphasizing cooperative mutual aid without profit-driven motives.
             </p>
           </div>
         </section>
 
         {/* SECTION 2: ESTABLISHMENT & OBJECTIVES */}
-        <section className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
-          <h2 className="text-xl font-bold text-slate-900 border-b border-slate-100 pb-3 uppercase tracking-wide">
+        <section className="p-6 bg-white border rounded-xl sm:p-8 border-slate-200/80 shadow-xs space-y-6">
+          <h2 className="pb-3 text-xl font-bold tracking-wide uppercase border-b text-slate-900 border-slate-100">
             ESTABLISHMENT AND OBJECTIVES OF THE “MY COMMUNITY FUND”
           </h2>
 
-          <p className="text-sm sm:text-base leading-relaxed text-slate-600 text-justify">
+          <p className="text-sm text-justify sm:text-base leading-relaxed text-slate-600">
             The <strong className="text-slate-800">“My Community Fund,”</strong> formally recognized as the <strong className="text-slate-800">“Community-Based Tabarru’ Mutual Assistance Fund,”</strong> signifies a critical initiative by the <strong className="text-slate-800">Cambodian Amanah Takaful Association (CATA)</strong> to nurture ta’awun (mutual assistance) and foster collective responsibility within the Muslim community in Cambodia. It is essential to clarify that this scheme does not function as conventional insurance and therefore does not guarantee contractual profit or return.
           </p>
 
@@ -139,21 +193,21 @@ export default function MyCommunityFund() {
               By conceptualizing the “My Community Fund,” CATA aims to:
             </h3>
 
-            <ul className="space-y-3 pl-2 sm:pl-4 text-sm sm:text-base text-slate-600">
+            <ul className="pl-2 space-y-3 text-sm sm:pl-4 sm:text-base text-slate-600">
               <li className="flex items-start gap-2">
-                <span className="text-blue-600 font-bold mt-1">•</span>
+                <span className="mt-1 font-bold text-blue-600">•</span>
                 <span>
                   <strong className="text-slate-800">Promote Solidarity:</strong> Encourage members of the Muslim community in Cambodia to contribute to a collective fund dedicated to assisting those facing unforeseen hardships.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-600 font-bold mt-1">•</span>
+                <span className="mt-1 font-bold text-blue-600">•</span>
                 <span>
                   <strong className="text-slate-800">Foster Community Engagement:</strong> Enable individuals to participate actively in local welfare initiatives, thereby strengthening communal ties and collective responsibility.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-600 font-bold mt-1">•</span>
+                <span className="mt-1 font-bold text-blue-600">•</span>
                 <span>
                   <strong className="text-slate-800">Adapt Best Practices:</strong> Learn from the successes of existing mutual assistance models both locally and globally, tailoring them to fit the unique cultural and social landscape of Cambodia’s Muslim community.
                 </span>
@@ -165,92 +219,93 @@ export default function MyCommunityFund() {
             <h3 className="text-base font-bold text-slate-900">
               Vision for the Future
             </h3>
-            <p className="text-sm sm:text-base leading-relaxed text-slate-600 text-justify">
+            <p className="text-sm text-justify sm:text-base leading-relaxed text-slate-600">
               The future vision for the “My Community Fund” includes expanding its reach and efficacy through educational programs, community training sessions, and partnerships with local NGOs and international organizations engaged in humanitarian and development efforts. By intertwining solidarity and responsibility throughout the community, CATA seeks to ensure that the Fund is sustainable, inclusive, and reflective of the altruistic values inherent within the Muslim faith.
             </p>
           </div>
         </section>
 
         {/* SECTION 3: MEMBERSHIP CARD & FEATURED IMAGE */}
-        <section className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <section className="p-6 bg-white border rounded-xl sm:p-8 border-slate-200/80 shadow-xs space-y-6">
+          <div className="grid grid-cols-1 gap-8 items-center lg:grid-cols-2">
             
             {/* LEFT: FLIPPABLE MEMBERSHIP CARD */}
             <div className="flex flex-col items-center justify-center space-y-3">
-              <span className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-                Membership card sample (Hover/Tap to flip)
+              <span className="px-3 py-1 text-sm font-semibold text-blue-600 border border-blue-100 rounded-full bg-blue-50">
+                Membership card sample
               </span>
 
               {/* 3D Flip Card Container */}
-<div 
-  className="w-full max-w-[380px] aspect-[1.586/1] perspective-1000 cursor-pointer group"
-  onMouseEnter={() => setIsFlipped(true)}
-  onMouseLeave={() => setIsFlipped(false)}
-  onClick={() => setIsFlipped(!isFlipped)}
->
-  <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
-    
-    {/* FRONT CARD */}
-    <div className="absolute inset-0 w-full h-full backface-hidden rounded-xl shadow-lg border border-slate-200 overflow-hidden bg-slate-100">
-      <img 
-        src={cardFrontImg} 
-        alt="Membership Card Front" 
-        className="w-full h-full object-fill block rounded-xl" 
-      />
-    </div>
+              <div 
+                className="w-full max-w-[380px] aspect-[1.586/1] perspective-1000 cursor-pointer group"
+                onMouseEnter={() => setIsFlipped(true)}
+                onMouseLeave={() => setIsFlipped(false)}
+                onClick={() => setIsFlipped(!isFlipped)}
+              >
+                <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+                  
+                  {/* FRONT CARD */}
+                  <div className="absolute inset-0 w-full h-full overflow-hidden border shadow-lg rounded-xl backface-hidden border-slate-200 bg-slate-100">
+                    <img 
+                      src={cardFrontImg} 
+                      alt="Membership Card Front" 
+                      className="block object-fill w-full h-full rounded-xl" 
+                    />
+                  </div>
 
-    {/* BACK CARD */}
-    <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-xl shadow-lg border border-slate-200 overflow-hidden bg-slate-100">
-      <img 
-        src={cardBackImg} 
-        alt="Membership Card Back" 
-        className="w-full h-full object-fill block rounded-xl" 
-      />
-    </div>
+                  {/* BACK CARD */}
+                  <div className="absolute inset-0 w-full h-full overflow-hidden border shadow-lg rounded-xl backface-hidden rotate-y-180 border-slate-200 bg-slate-100">
+                    <img 
+                      src={cardBackImg} 
+                      alt="Membership Card Back" 
+                      className="block object-fill w-full h-full rounded-xl" 
+                    />
+                  </div>
 
-  </div>
-</div>
+                </div>
+              </div>
             </div>
 
             {/* RIGHT: FEATURED HERO IMAGE */}
-            <div className="w-full h-64 sm:h-80 rounded-xl overflow-hidden border border-slate-200 shadow-xs bg-slate-100">
+            <div className="w-full h-64 overflow-hidden border rounded-xl sm:h-80 border-slate-200 shadow-xs bg-slate-100">
               <img
-                src="https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?q=80&w=800&auto=format&fit=crop"
+                src={featureHeroImg}
                 alt="CATA Field Work Gathering"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                className="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
               />
-              {/* Replace src with your imported local feature image */}
             </div>
 
           </div>
         </section>
 
-        {/* SECTION 4: GALLERY GRID */}
+        {/* SECTION 4: GALLERY GRID WITH SMALL-TO-LARGE SCALING ON SCROLL */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold text-slate-800">
               Community Field Activities & Support Distribution
             </h3>
-            <span className="text-xs text-slate-500 font-medium">
+            <span className="text-xs font-medium text-slate-500">
               {galleryImages.length} Photos
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-            {galleryImages.map((img) => (
-              <div 
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
+            {galleryImages.map((img, index) => (
+              <ScaleReveal 
                 key={img.id} 
-                className="group relative aspect-4/3 rounded-lg overflow-hidden bg-slate-200 border border-slate-200/80 shadow-2xs"
+                delay={(index % 4) * 80} // Smooth horizontal stagger per row
               >
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-2">
-                  <span className="text-[11px] text-white font-medium truncate">{img.alt}</span>
+                <div className="relative overflow-hidden border rounded-lg group aspect-4/3 bg-slate-200 border-slate-200/80 shadow-2xs">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 flex items-end p-2 transition-opacity duration-300 opacity-0 bg-black/30 group-hover:opacity-100">
+                    <span className="text-[11px] text-white font-medium truncate">{img.alt}</span>
+                  </div>
                 </div>
-              </div>
+              </ScaleReveal>
             ))}
           </div>
         </section>

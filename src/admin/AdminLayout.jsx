@@ -14,7 +14,8 @@ import {
   Home,
   FolderArchive,
   UserCog,
-  BriefcaseBusiness
+  BriefcaseBusiness,
+  GraduationCap
 } from 'lucide-react';
 
 export default function AdminLayout() {
@@ -58,6 +59,8 @@ export default function AdminLayout() {
     { label: 'Secretariat', path: '/admin/secretariat', icon: BriefcaseBusiness },
     { label: 'Management Level', path: '/admin/management', icon: BriefcaseBusiness },
     { label: 'Shariah Advisory', path: '/admin/shariah-advisory', icon: BriefcaseBusiness },
+    { label: 'Partners', path: '/admin/partners', icon: BriefcaseBusiness },
+    { label: 'Scholarships', path: '/admin/scholarships', icon: GraduationCap },
     { label: 'Contact Submissions', path: '/admin/contacts', icon: Mail },
     ...(user?.role === 'super_admin' ? [{ label: 'User Management', path: '/admin/users', icon: UserCog }] : []),
   ];

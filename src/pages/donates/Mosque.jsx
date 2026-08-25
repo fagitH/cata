@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getRelatedProjects } from '../../data/donationProjects';
-
+import mosque from '../../assets/image/donation/donate5.jpg';
 function MosqueMadrasahDevelopment() {
   const [amount, setAmount] = useState('1');
   const [selectedPreset, setSelectedPreset] = useState(null);
@@ -63,7 +63,7 @@ function MosqueMadrasahDevelopment() {
           {/* LEFT: MAIN IMAGE WITH ZOOM ICON */}
           <div className="relative group">
             <img
-              src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800&auto=format&fit=crop"
+              src={mosque}
               alt={campaignTitle}
               className="object-cover w-full h-auto border shadow-xs rounded-xs border-slate-100"
             />

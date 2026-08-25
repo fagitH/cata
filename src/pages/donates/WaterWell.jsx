@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getRelatedProjects } from '../../data/donationProjects';
-
+import water from '../../assets/image/donation/water.webp';
 function CleanWaterProject() {
   const [amount, setAmount] = useState('1');
   const [selectedPreset, setSelectedPreset] = useState(null);
@@ -63,7 +63,7 @@ function CleanWaterProject() {
           {/* LEFT: MAIN IMAGE WITH ZOOM ICON */}
           <div className="relative group">
             <img
-              src="https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?q=80&w=800&auto=format&fit=crop"
+              src={water}
               alt={campaignTitle}
               className="object-cover w-full h-auto border shadow-xs rounded-xs border-slate-100"
             />

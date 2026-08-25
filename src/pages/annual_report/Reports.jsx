@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { api, toAssetUrl } from '../../utils/api';
-
+import bgImage from '../../assets/image/pattern.png';
 const getImageUrl = (imagePath) => {
   if (!imagePath) return 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=400&fit=crop';
   return toAssetUrl(imagePath);
@@ -56,24 +56,25 @@ export default function ReportDetailPage() {
       <>
       {/* ===== HERO BANNER ===== */}
       <section 
-        className="relative overflow-hidden bg-gradient-to-br from-[#0b384c] via-[#0d4760] to-[#125875] text-white py-14 lg:py-20 px-4 bg-cover bg-center"
-        style={{ 
-          backgroundImage: report?.image ? `url('${getImageUrl(report.image)}')` : undefined,
-          backgroundBlendMode: 'overlay'
-        }}
-      >
-        <div className="relative z-10 max-w-5xl mx-auto text-center">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 mb-4 text-xs font-semibold uppercase tracking-wider text-amber-300 bg-white/10 backdrop-blur-md rounded-full border border-amber-300/30">
-            Official Annual Report
-          </span>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
-            {report?.title}
-          </h1>
-          <p className="max-w-2xl mx-auto mt-4 text-base leading-relaxed text-slate-200 sm:text-lg">
-            {report?.subtitle}
-          </p>
-        </div>
-      </section>
+  className="relative overflow-hidden text-[#0070ba] py-14 lg:py-20 px-4 bg-center"
+  style={{ backgroundImage: `url(${bgImage})` }}
+>
+  {/* Background Overlay */}
+  <div className="absolute inset-0 bg-white/55 pointer-events-none" />
+
+  {/* Content Container */}
+  <div className="relative z-10 max-w-5xl mx-auto text-center">
+    {/* <span className="inline-flex items-center gap-1.5 px-3 py-1 mb-4 text-xs font-semibold uppercase tracking-wider text-amber-300 bg-white/10 backdrop-blur-md rounded-full border border-amber-300/30">
+      Official Annual Report
+    </span> */}
+    <h1 className="text-3xl font-extrabold tracking-tight text-[#0070ba] sm:text-4xl lg:text-5xl">
+      {report?.title}
+    </h1>
+    <p className="max-w-2xl mx-auto mt-4 text-base leading-relaxed text-slate-700 sm:text-lg">
+      {report?.subtitle}
+    </p>
+  </div>
+</section>
 
       {/* ===== ACTION BAR ===== */}
       <div className="max-w-5xl px-4 mx-auto -mt-6 sm:px-6">

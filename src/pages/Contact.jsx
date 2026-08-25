@@ -53,7 +53,7 @@ export default function ContactPage() {
         />
         <div className="absolute inset-0 bg-[#2d73a5]/50 " />
         <div className="relative z-10 flex flex-col items-center max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl font-extrabold tracking-wide text-white uppercase sm:text-5xl drop-shadow-sm">
+          <h1 className="text-3xl font-extrabold tracking-wide text-white uppercase sm:text-6xl drop-shadow-sm">
             CONTACT
           </h1>
           <div className="w-28 h-[3px] bg-[#38bdf8] my-3 rounded-full shadow-sm" />

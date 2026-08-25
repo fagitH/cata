@@ -1,81 +1,92 @@
 // src/data/donationProjects.js
+import waterWell from '../assets/image/donation/water.webp';   
+import zakat from '../assets/image/donation/zakat.webp';   
+import educate from '../assets/image/donation/educat.jpg';   
+import ramadhan from '../assets/image/donation/ramadhan.jpg';   
+import orphan from '../assets/image/donation/orphan.jpg';   
+import qurban from '../assets/image/donation/qurban.jpg';   
+import umrah from '../assets/image/donation/umrah.webp';   
+import communityFund from '../assets/image/donation/community_fund.jpg';   
+import mosque from '../assets/image/donation/donate5.jpg';   
+import emergency from '../assets/image/donation/emergency.webp';   
+import waqf from '../assets/image/donation/waqf.webp';   
 
 export const donationProjects = [
   {
     id: 'clean-water',
     title: 'Water Well / Clean Water Project',
     category: 'Community support',
-    image: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?q=80&w=800&auto=format&fit=crop',
+    image: waterWell,
     href: '/donate-water-well',
   },
   {
     id: 'zakat',
     title: 'Zakat Al-Mal Fund',
     category: 'Donation',
-    image: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb0?q=80&w=800&auto=format&fit=crop',
+    image: zakat,
     href: '/donate-zakat',
   },
   {
     id: 'education-support',
     title: 'Education & Student Support',
     category: 'Education',
-    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop',
+    image: educate,
     href: '/donate-education',
   },
   {
     id: 'ramadan-food',
     title: 'Food Bank / Ramadan Food Package',
     category: 'Relief',
-    image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=500&auto=format&fit=crop',
+    image: ramadhan,
     href: '/donate-ramadhan',
   },
   {
     id: 'orphan-support',
     title: 'Orphan Care & Support',
     category: 'Sponsorship',
-    image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=500&auto=format&fit=crop',
+    image: orphan,
     href: '/donate-education',
   },
   {
     id: 'qurban-cambodia',
     title: 'Qurban in Cambodia',
     category: 'Qurban',
-    image: 'https://images.unsplash.com/photo-1546445317-29f4545f9d52?q=80&w=500&auto=format&fit=crop',
+    image: qurban,
     href: '/donate-qurban',
   },
   {
     id: 'umrah-hajj',
     title: 'Umrah / Hajj Donation',
     category: 'Pilgrimage',
-    image: 'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?q=80&w=500&auto=format&fit=crop',
+    image: umrah,
     href: '/donate-umrah-hajj',
   },
   {
     id: 'community-funds',
     title: 'My Community Support Funds',
     category: 'Community support',
-    image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=500&auto=format&fit=crop',
+    image:communityFund,
     href: '/my-comm-fund',
   },
   {
     id: 'mosque-development',
     title: 'Mosque & Madrasah Development',
     category: 'Infrastructure',
-    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=500&auto=format&fit=crop',
+    image: mosque,
     href: '/donate-mosque',
   },
   {
     id: 'emergency-relief',
     title: 'Emergency Medical & Disaster Relief',
     category: 'Emergency',
-    image: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=500&auto=format&fit=crop',
+    image: emergency,
     href: '/donate-emergency',
   },
     {
     id: 'waqf-contribution',
     title: 'Waqf Contribution',
     category: 'Donation',
-    image: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?q=80&w=800&auto=format&fit=crop',
+    image:waqf,
     href: '/donate-waqf',
   },
 ];

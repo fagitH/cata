@@ -2,11 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ShieldCheck, HandCoins, Lock } from 'lucide-react';
 import { apiFetch, toAssetUrl } from '../utils/api';
-import bgImage from '../assets/image/image.png';
-// import bgSlide from '../assets/image/Banner1.jpg';
-// import bgSlide2 from '../assets/image/Banner2.jpg';
-// import bgSlide3 from '../assets/image/Banner3.jpg';
-// import bgSlide4 from '../assets/image/Banner6.jpg';
+import bgImage from '../assets/image/pattern.png';
+
 import UsersIconImage from '../assets/image/MyCommunity.png';
 import UsersIcon2Image from '../assets/image/HajjFund.png';
 import UsersIcon3Image from '../assets/image/FoodBank.png';
@@ -15,7 +12,15 @@ import UsersIcon5Image from '../assets/image/education.png';
 import UsersIcon6Image from '../assets/image/riba.png';
 import UsersIcon7Image from '../assets/image/community_project.png';
 import datuk from '../assets/image/datuk_OH.png';
-
+import cataYouth from '../assets/image/home_page/cata_youth.jpg';
+import waterWell from '../assets/image/home_page/water_well.png';
+import zakat from '../assets/image/home_page/zakat_pack.jpg';
+import ramadhan from '../assets/image/home_page/ramadhan_pack.jpg';
+import qurban from '../assets/image/home_page/qurban_pack.jpg';
+import education from '../assets/image/home_page/educat_pack.png';
+import orphan from '../assets/image/donation/donate1.jpg';
+import school from '../assets/image/donation/school.jpg';
+import plant from '../assets/image/donation/plantree.jpg';
 /* ---------------------------------------------------------------- */
 /*  Animation helpers — self-contained, no tailwind.config changes   */
 /* ---------------------------------------------------------------- */
@@ -140,7 +145,7 @@ const quickLinks = [
     ),
   },
   {
-    title: 'BUSINESS COOPERETIVE',
+    title: 'BUSINESS COOPERATIVE',
     href: 'https://cbc.takafulcambodia.org/',
     icon: (
        <img
@@ -188,9 +193,9 @@ const quickLinks = [
 
 
 
-// Direction setting for the 4 activity cards
 const activities = [
   {
+    image: education,
     title: 'Education Package for Orphan',
     desc: 'Our generosity can transform a life. By donating to our orphan fundraiser, you’re helping provide the next generation with a new life.',
     price: 'USD10/Package',
@@ -198,6 +203,7 @@ const activities = [
     direction: 'right', // 1st object (Left) comes from left
   },
   {
+    image: qurban,
     title: 'Qurban Project in Cambodia',
     desc: 'Giving your Qurban (a sacrifice) is a sacred duty ordered by Allah (SWT). Every year during the holy month of Dhul Hijjah.',
     price: 'USD650/Cow',
@@ -205,6 +211,7 @@ const activities = [
     direction: 'up', // Middle object comes from bottom
   },
   {
+    image: ramadhan,
     title: 'Ramadhan Food Packages',
     desc: 'Continuing the tradition, in Ramadan 2026, with the help of Allah, we will be distributing Ramadan Food Packs across countries this year.',
     price: 'USD30/Package',
@@ -213,6 +220,7 @@ const activities = [
     direction: 'up', // Middle object comes from bottom
   },
   {
+    image: zakat,
     title: 'Zakat to help the Poor',
     desc: 'Zakat is an obligatory contribution used to reduce the hardships faced by communities and families living in poverty.',
     price: 'Any Amount',
@@ -220,7 +228,7 @@ const activities = [
     ctaLabel: 'Calculate Your Zakat',
     direction: 'left', // 4th object (Right) comes from right
   },
-]
+];
 
 const impactStats = [
   { value: '1600', label: 'Total membership 2024' },
@@ -239,7 +247,8 @@ const sadaqah = [
     desc: 'Did you know that more than 780 million people lack access to safe and clean and drinking water? That’s more than one in every 10 people on the planet! To add, nearly 1 million people die each year from waterborne diseases, with children being the most susceptible, affecting their ability to receive an education.',
     price: null,
     ctaLabel: 'Read More',
-    href: '/donate-water-well',
+    href: '/water-well-project',
+    image:waterWell,
   },
   {
     tab: 'Orphans',
@@ -250,6 +259,7 @@ const sadaqah = [
     price: '$ any amount',
     ctaLabel: 'Donate Now',
     href: '/donate-education',
+    image:orphan,
   },
   {
     tab: 'Building School',
@@ -260,6 +270,7 @@ const sadaqah = [
     price: '$ any amount',
     ctaLabel: 'Donate Now',
     href: '/donate-school',
+    image:school,
   },
   {
     tab: 'Plant Trees',
@@ -270,6 +281,7 @@ const sadaqah = [
     price: '$ any amount',
     ctaLabel: 'Read More',
     href: '/donate-plant',
+    image:plant,
   },
 ]
 
@@ -419,11 +431,11 @@ export default function Home() {
 
       {/* ===== QUICK LINKS GRID ===== */}
 <section
-  className="relative px-4 bg-center bg-cover py-14"
+  className="relative px-4 bg-center  py-14"
   style={{ backgroundImage: `url(${bgImage})` }}
 >
   {/* Light Overlay */}
-  <div className="absolute inset-0 pointer-events-none bg-white/75" />
+  <div className="absolute inset-0 pointer-events-none bg-white/55" />
 
   <div className="relative z-10 mx-auto max-w-7xl">
     {/* Horizontal scroll container on mobile (x-axis only) */}
@@ -522,10 +534,16 @@ export default function Home() {
   </div>
 </section>
 
-      {/* ===== CHAIR OF BOARD SPEECH ===== */}
-<section className="py-12 bg-[#2b72a4]">
-  <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-    <div className="rounded-3xl bg-white p-8 sm:p-12 shadow-lg grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8 items-start">
+{/* ===== CHAIR OF BOARD SPEECH ===== */}
+<section 
+  className="relative py-12 bg-center bg-no-repeat bg-cover"
+  style={{ backgroundImage: `url(${bgImage})` }}
+>
+  {/* Dark Overlay to maintain readability against background images */}
+  <div className="absolute inset-0 bg-[#2b72a4]/80 " />
+
+  <div className="relative px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div className="grid grid-cols-1 gap-8 p-8 bg-white shadow-lg rounded-3xl sm:p-12 md:grid-cols-[280px_1fr] items-start">
       
       {/* Left Column: Circular Photo & Speaker Info */}
       <Reveal>
@@ -658,7 +676,7 @@ export default function Home() {
           <div className="flex flex-col h-full p-5 bg-white rounded-lg shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl">
             <div className="aspect-[4/3] w-full overflow-hidden rounded-md bg-slate-100">
               <img
-                src={a.image || 'https://via.placeholder.com/400x300'}
+                src={a.image}
                 alt={a.title}
                 className="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
               />
@@ -673,7 +691,7 @@ export default function Home() {
             <p className="mt-3 text-sm font-bold text-slate-800">{a.price}</p>
             <Link
               to={a.href}
-              className="mt-4 w-full rounded-md bg-[#f2a900] px-4 py-2.5 text-center text-sm font-bold text-[#0b3d3a] transition-colors duration-300 hover:bg-[#d99600]"
+              className="mt-4 w-full rounded-md bg-[#f2a900] px-4 py-2.5 text-center text-sm font-bold !text-[#ffffff] transition-colors duration-300 hover:bg-[#d99600]"
             >
               {a.ctaLabel || 'Donate Now'}
             </Link>
@@ -788,12 +806,17 @@ export default function Home() {
   </div>
 </section>
 
-    {/* ===== CATA'S VISION CARD ===== */}
-<section className="py-12 bg-[#bce3f2] lg:py-16">
-  <div className="max-w-5xl px-4 mx-auto sm:px-6 lg:px-8">
+   {/* ===== CATA'S VISION CARD ===== */}
+<section 
+  className="relative py-10 bg-[#b6ced8] lg:py-12" style={{ backgroundImage: `url(${bgImage})` }}
+>
+  {/* Light Brand Tint Overlay */}
+  <div className="absolute  " />
+
+  <div className="relative max-w-5xl px-4 mx-auto sm:px-6 lg:px-8">
     <Reveal>
       {/* White Card Container */}
-      <div className="p-8 text-center bg-white shadow-sm rounded-3xl sm:p-14">
+      <div className="p-8 text-center bg-white shadow-md rounded-3xl sm:p-14">
         
         {/* Main Heading */}
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1876b9] leading-snug tracking-tight max-w-4xl mx-auto">
@@ -801,7 +824,7 @@ export default function Home() {
         </h2>
 
         {/* Description Paragraph */}
-        <p className="max-w-3xl mx-auto mt-6 text-sm font-normal leading-relaxed text-slate-500 sm:text-base">
+        <p className="max-w-3xl mx-auto mt-6 text-sm font-normal leading-relaxed text-slate-600 sm:text-base">
           CATA started the Project as a legacy project that now reaches millions of
           Muslims in Cambodia. This Ramadan was no different. Thanks to YOU, our
           generous donors, Ramadan 2024 has been our biggest yet. You didn't
@@ -814,7 +837,7 @@ export default function Home() {
         <div className="flex justify-center mt-8">
           <Link
             to="/news"
-            className="inline-block px-7 py-3 text-sm font-semibold text-white bg-[#f58220] hover:bg-[#e07318] rounded-lg shadow-sm transition-all duration-200"
+            className="inline-block px-7 py-3 text-sm font-semibold !text-white bg-[#f58220] hover:bg-[#e07318] rounded-lg shadow-sm transition-all duration-200"
           >
             See your impact here
           </Link>
@@ -834,7 +857,7 @@ export default function Home() {
       <Reveal>
         <div className="overflow-hidden rounded-xl aspect-[4/3] bg-slate-100 border-2 border-dashed border-slate-300 flex items-center justify-center">
           <img
-            src="" /* <--- PASTE YOUR IMAGE PATH HERE */
+            src={cataYouth}
             alt="CATA's Youth"
             className="object-cover w-full h-full"
             onError={(e) => {
@@ -842,7 +865,6 @@ export default function Home() {
             }}
           />
           {/* Visual placeholder text when image is empty */}
-          <span className="text-xs font-medium text-slate-400">Insert Image Here</span>
         </div>
       </Reveal>
 
@@ -875,7 +897,7 @@ export default function Home() {
 </section>
 
    {/* ===== SADAQAH JARIYAH ===== */}
-<section className="py-10 bg-[#bce3f2] lg:py-12">
+<section className="py-10 bg-[#b6ced8] lg:py-12" style={{ backgroundImage: `url(${bgImage})` }}>
   <div className="max-w-4xl px-4 mx-auto sm:px-6 lg:px-8">
     
     {/* Centered Top Header */}
@@ -933,15 +955,14 @@ export default function Home() {
           
           {/* Left Column: Compact Image Placeholder */}
           <div className="overflow-hidden bg-slate-100 rounded-lg aspect-[4/3] flex items-center justify-center border border-slate-200 relative">
-            <img
-              src={activeSadaqah.image || ''}
-              alt={activeSadaqah.title}
-              className="object-cover w-full h-full"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-            <span className="text-[11px] text-slate-400 font-medium">Insert Image Here</span>
+          <img
+  src={activeSadaqah.image} 
+  alt={activeSadaqah.title}
+  className="object-cover w-full h-full"
+  onError={(e) => {
+    e.currentTarget.style.display = 'none';
+  }}
+/>
           </div>
 
           {/* Right Column: Text and Action Button */}

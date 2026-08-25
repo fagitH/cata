@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getRelatedProjects } from '../../data/donationProjects';
+import emergency1 from '../../assets/image/donation/emergency.webp';   
+import emergency2 from '../../assets/image/donation/emergency.jpg';   
 
 function EmergencyRelief() {
   const [amount, setAmount] = useState('1');
@@ -13,8 +15,8 @@ function EmergencyRelief() {
   const presetAmounts = [5, 10, 20, 50, 100, 200, 500, 750];
 
   const galleryImages = [
-    'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=800&auto=format&fit=crop',
+    emergency1,
+    emergency2,
   ];
 
   const campaignDescription =

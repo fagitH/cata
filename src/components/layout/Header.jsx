@@ -79,29 +79,31 @@ function Header() {
               </div>
             </div>
 
-            {/* Main Nav Links (News, Blogs, Contact, Partnership, Annual Reports, Newsletter) */}
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.label}
-                to={link.path}
-                className={({ isActive }) =>
-                  `inline-block transition-all duration-200 hover:-translate-y-0.5 ${
-                    isActive
-                      ? 'font-semibold text-orange-500'
-                      : 'text-slate-600 hover:text-orange-500'
-                  }`
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
+{navLinks.map((link) => (
+  <NavLink
+    key={link.label}
+    to={link.path}
+    className="group inline-block transition-all duration-200 hover:-translate-y-0.5"
+  >
+    {({ isActive }) => (
+      <span
+        className={`transition-colors duration-200 group-hover:text-orange-500 ${
+          isActive ? 'font-semibold text-orange-500' : 'text-slate-600'
+        }`}
+      >
+        {link.label}
+      </span>
+    )}
+  </NavLink>
+))}
+
           </nav>
 
           {/* Desktop Donate Button */}
           <div className="hidden lg:flex lg:items-center">
             <Link
               to="/donate"
-              className="rounded-full bg-amber-500 px-5 py-2.5 text-base font-semibold text-white shadow-lg shadow-amber-500/20 transition hover:bg-amber-400"
+              className="rounded-full bg-amber-500 px-5 py-2.5 text-base font-semibold !text-white shadow-lg shadow-amber-500/20 transition hover:bg-amber-400"
             >
               Donate Now
             </Link>

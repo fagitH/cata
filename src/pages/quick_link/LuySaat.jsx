@@ -3,9 +3,9 @@ import React from 'react';
 // ==========================================
 // REPLACE THESE IMPORTS WITH YOUR ACTUAL IMAGES
 // ==========================================
-import bannerImg from '../../assets/image/Banner1.jpg';
-// import acledaLogo from '../assets/acleda-logo.png';
-// import abaLogo from '../assets/aba-logo.png';
+ import bannerImg from '../../assets/image/luy_saat.jpg';
+ import acledaLogo from '../../assets/image/luy_saat/ac.jpg';
+ import abaLogo from '../../assets/image/luy_saat/aba.webp';
 
 export default function LuyKhnhumSaat() {
   const videoCards = [
@@ -134,24 +134,17 @@ export default function LuyKhnhumSaat() {
             {/* ACLEDA BANK LOGO BOX */}
             <div className="bg-white border-2 border-slate-200 rounded-2xl p-8 flex items-center justify-center min-h-[180px] shadow-2xs hover:shadow-md transition-shadow">
               <div className="flex items-center space-x-3 text-center">
-                <div className="text-blue-900 font-extrabold text-2xl tracking-tighter">
-                  អេស៊ីលីដា <span className="block text-sm font-semibold tracking-normal text-slate-600">ACLEDA BANK</span>
-                </div>
-                {/* Replace with <img src={acledaLogo} alt="ACLEDA Bank" className="max-h-16 object-contain" /> */}
+               
+                 <img src={acledaLogo} alt="ACLEDA Bank" className="h-full object-contain" />
               </div>
             </div>
 
             {/* ABA BANK LOGO BOX */}
             <div className="bg-[#005c78] text-white rounded-2xl p-8 flex flex-col items-center justify-center min-h-[180px] shadow-2xs hover:shadow-md transition-shadow">
               <div className="text-center space-y-1">
-                <div className="text-3xl font-black tracking-widest flex items-center justify-center gap-1">
-                  ABA<span className="text-red-500 font-bold">'</span> BANK
-                </div>
-                <div className="text-[10px] sm:text-xs font-semibold tracking-wider text-slate-200 uppercase">
-                  National Bank of Canada Group
-                </div>
+                
               </div>
-              {/* Replace with <img src={abaLogo} alt="ABA Bank" className="max-h-16 object-contain" /> */}
+             <img src={abaLogo} alt="ABA Bank" className="h-full object-contain" />
             </div>
 
           </div>

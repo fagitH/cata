@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getRelatedProjects } from '../../data/donationProjects';
+import waqf from '../../assets/image/donation/waqf.webp';   
 
 function WaqfContribution() {
   const [amount, setAmount] = useState('1');
@@ -64,7 +65,7 @@ function WaqfContribution() {
           {/* LEFT: MAIN IMAGE WITH ZOOM ICON */}
           <div className="relative group">
             <img
-              src="https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?q=80&w=800&auto=format&fit=crop"
+              src={waqf}
               alt={campaignTitle}
               className="object-cover w-full h-auto border shadow-xs rounded-xs border-slate-100"
             />

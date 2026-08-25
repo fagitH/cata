@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { LockKeyhole, LogIn, Mail } from 'lucide-react';
+import { Eye, EyeOff, LockKeyhole, LogIn, Mail } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../../utils/api.js';
 import contactBanner from '../../assets/image/contactBanner.jpg';
@@ -67,6 +67,7 @@ export default function AdminLogin() {
   const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState('');
@@ -138,13 +139,21 @@ export default function AdminLogin() {
             <span className="relative block">
               <LockKeyhole className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={19} />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 autoComplete="current-password"
                 required
-                className="w-full rounded-lg border border-gray-300 py-3 pl-10 pr-3 text-gray-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-gray-300 py-3 pl-10 pr-10 text-gray-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
+              </button>
             </span>
           </label>
 

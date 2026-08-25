@@ -1,109 +1,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// ==========================================
-// IMPORT YOUR LOCAL IMAGES HERE:
-// ==========================================
-// import bannerHeaderImg from '../assets/banner-header.png';
-// import authorizationImg from '../assets/authorization.png';
-// import foodBankHeroImg from '../assets/food-bank-hero.png';
-// import waqfImg from '../assets/waqf.png';
-// import ramadanImg from '../assets/ramadan.png';
-// import partnershipImg from '../assets/partnership.png';
-// import distributionImg from '../assets/distribution.png';
-// import zakatImg from '../assets/zakat.png';
-// import qurbanImg from '../assets/qurban.png';
-// import kidsImg from '../assets/kids.png';
-// import livestockImg from '../assets/livestock.png';
-// import khqrKhrImg from '../assets/khqr-khr.png';
-// import khqrUsdImg from '../assets/khqr-usd.png';
+
+// Image Imports
+import bannerHeaderImg from '../../assets/image/food_bank/banner01.jpg';
+import img1 from '../../assets/image/food_bank/img1.jpg';
+import img01 from '../../assets/image/food_bank/img01.jpg';
+import img02 from '../../assets/image/food_bank/img02.jpg';
+import img03 from '../../assets/image/food_bank/img03.jpg';
+import img04 from '../../assets/image/food_bank/img04.jpg';
+import img05 from '../../assets/image/food_bank/img05.jpg';
+import img06 from '../../assets/image/food_bank/img06.jpg';
+import img07 from '../../assets/image/food_bank/img07.png';
+import img08 from '../../assets/image/food_bank/img08.jpg';
+import img09 from '../../assets/image/food_bank/img09.webp';
+import khqrKhrImg from '../../assets/image/food_bank/ac1.jpg';
+import khqrUsdImg from '../../assets/image/food_bank/ac2.jpg';
 
 export default function FoodBankInitiative() {
   return (
     <div className="min-h-screen bg-white text-[#555555] font-sans antialiased pb-20">
       
-      {/* HEADER BANNER SECTION */}
+      {/* HEADER BANNER */}
       <section className="max-w-6xl mx-auto px-4 pt-6">
         <div className="relative rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-white">
-          {/* Main Top Banner Graphic */}
-          <div className="relative w-full bg-[#00A3E0] p-6 text-white flex flex-col md:flex-row justify-between items-center gap-6">
-            
-            {/* Left Header Titles */}
-            <div className="bg-white rounded-xl p-6 text-center text-[#0073B7] shadow-md w-full md:w-2/3">
-              <h1 className="text-2xl sm:text-4xl font-extrabold tracking-wide uppercase">
-                DMDI CAMBODIA FOOD BANK
-              </h1>
-              <p className="text-xs sm:text-sm font-bold text-black mt-2 tracking-widest uppercase">
-                EXCLUSIVE OPERATED BY
-              </p>
-              <h2 className="text-sm sm:text-lg font-black text-black tracking-wider uppercase mt-1">
-                CAMBODIAN AMANAH TAKAFUL ASSOCIATION (CATA)
-              </h2>
-            </div>
-
-            {/* Right Contact Info */}
-            <div className="text-white space-y-2 text-xs sm:text-sm font-medium w-full md:w-1/3">
-              <div className="flex items-center gap-2">
-                <span>📞</span>
-                <span>+855 90 311 195 | +855 98 311 195</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span>🌐</span>
-                <a href="https://www.takafulcambodia.org" target="_blank" rel="noreferrer" className="underline hover:text-slate-100">
-                  www.takafulcambodia.org
-                </a>
-              </div>
-              <div className="flex items-start gap-2">
-                <span>📍</span>
-                <span>#116D, Russian Blvd, Sangkat Srah Chak, Khan Daun Penh, Phnom Penh, Cambodia</span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Quick Pillar Bubbles Banner */}
-          <div className="bg-[#00A3E0] px-4 pb-6 pt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 text-center text-white text-[11px] font-medium">
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-16 h-16 rounded-full border-2 border-white overflow-hidden bg-slate-200 flex items-center justify-center">
-                <img src={/* waqfImg */ ""} alt="Waqf" className="w-full h-full object-cover" />
-              </div>
-              <span>Waqf for Sustainable Food Supply</span>
-            </div>
-
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-16 h-16 rounded-full border-2 border-white overflow-hidden bg-slate-200 flex items-center justify-center">
-                <img src={/* ramadanImg */ ""} alt="Ramadan" className="w-full h-full object-cover" />
-              </div>
-              <span>Ramadan and Emergency Food Packages</span>
-            </div>
-
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-16 h-16 rounded-full border-2 border-white overflow-hidden bg-slate-200 flex items-center justify-center">
-                <img src={/* partnershipImg */ ""} alt="Partnerships" className="w-full h-full object-cover" />
-              </div>
-              <span>Partnerships and Awareness Campaigns</span>
-            </div>
-
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-16 h-16 rounded-full border-2 border-white overflow-hidden bg-slate-200 flex items-center justify-center">
-                <img src={/* distributionImg */ ""} alt="Distribution" className="w-full h-full object-cover" />
-              </div>
-              <span>Food Contribution and Distribution</span>
-            </div>
-
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-16 h-16 rounded-full border-2 border-white overflow-hidden bg-slate-200 flex items-center justify-center">
-                <img src={/* zakatImg */ ""} alt="Zakat" className="w-full h-full object-cover" />
-              </div>
-              <span>Zakat for Food Security</span>
-            </div>
-
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-16 h-16 rounded-full border-2 border-white overflow-hidden bg-slate-200 flex items-center justify-center">
-                <img src={/* qurbanImg */ ""} alt="Qurban" className="w-full h-full object-cover" />
-              </div>
-              <span>Qurban for the Hungry</span>
-            </div>
-          </div>
+          <img
+            src={bannerHeaderImg}
+            alt="DMDI Cambodia Food Bank Banner"
+            className="w-full h-auto object-cover block"
+          />
         </div>
       </section>
 
@@ -122,7 +46,7 @@ export default function FoodBankInitiative() {
         </div>
         <div>
           <img
-            src={/* authorizationImg */ ""}
+            src={img1}
             alt="Authorization Ceremony"
             className="w-full rounded-2xl border border-slate-200 bg-slate-100 object-cover aspect-[4/3]"
           />
@@ -133,7 +57,7 @@ export default function FoodBankInitiative() {
       <section className="max-w-6xl mx-auto px-4 pt-12">
         <div className="flex flex-col items-center mb-8">
           <img
-            src={/* foodBankHeroImg */ ""}
+            src={img01}
             alt="Food Bank Initiative"
             className="w-full max-w-md rounded-2xl bg-slate-100 object-cover aspect-[16/10] mb-6"
           />
@@ -141,21 +65,23 @@ export default function FoodBankInitiative() {
             FOOD BANK INITIATIVE
           </h2>
           <Link to="/volunter-staff">
-  <button className="mt-4 px-6 py-2.5 bg-[#F99D1C] hover:bg-[#e08913] text-white font-bold text-xs sm:text-sm uppercase tracking-wider rounded-md shadow-md transition-all">
-    STAFF VOLUNTEER FORM
-  </button>
-</Link>
+            <button className="mt-4 px-6 py-2.5 bg-[#F99D1C] hover:bg-[#e08913] text-white font-bold text-xs sm:text-sm uppercase tracking-wider rounded-md shadow-md transition-all">
+              STAFF VOLUNTEER FORM
+            </button>
+          </Link>
         </div>
 
         {/* MISSION & CORE PROGRAMS GRID */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-6">
           
-          {/* Side Image Column */}
-          <div className="md:col-span-4 space-y-6">
-            <img src={/* waqfImg */ ""} alt="Mission support" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
-            <img src={/* distributionImg */ ""} alt="Food package distribution" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
-            <img src={/* zakatImg */ ""} alt="Zakat project" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
-            <img src={/* ramadanImg */ ""} alt="Community project" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
+          {/* Side Image Column displaying all core program images */}
+          <div className="md:col-span-3 space-y-6">
+            <img src={img02} alt="Food Contribution & Distribution" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
+            <img src={img03} alt="Zakat for Food Security" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
+            <img src={img04} alt="Qurban for the Hungry" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
+            <img src={img05} alt="Waqf for Sustainable Food Supply" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
+            <img src={img06} alt="Ramadan & Emergency Food Packages" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
+            <img src={img08} alt="Partnerships & Awareness Campaigns" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
           </div>
 
           {/* Program Descriptions Column */}
@@ -239,10 +165,9 @@ export default function FoodBankInitiative() {
               <div>
                 <h4 className="font-bold text-[#0073B7]">For Donors</h4>
                 <ul className="list-disc list-inside mt-1 space-y-1 pl-2">
-                  <li><strong className="text-slate-700">Immediate Relief:</strong> Access to nutritious food for families facing hardship</li>
-                  <li><strong className="text-slate-700">Dignity Preservation:</strong> Receive assistance through a culturally-sensitive, respectful system</li>
-                  <li><strong className="text-slate-700">Community Connection:</strong> Remain connected to the broader Muslim community during difficult times</li>
-                  <li><strong className="text-slate-700">Seasonal Support:</strong> Special assistance during significant Islamic months like Ramadan and Eid</li>
+                  <li><strong className="text-slate-700">Spiritual Fulfillment:</strong> Fulfill Islamic obligations of Zakat, Qurban, and Sadaqah</li>
+                  <li><strong className="text-slate-700">Transparent Impact:</strong> Receive regular updates on how donations directly impact lives</li>
+                  <li><strong className="text-slate-700">Convenient Giving:</strong> Easy contribution methods through digital banking and QR codes</li>
                 </ul>
               </div>
 
@@ -265,9 +190,9 @@ export default function FoodBankInitiative() {
       <section className="max-w-6xl mx-auto px-4 pt-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           
-          <div className="md:col-span-4 space-y-6">
-            <img src={/* kidsImg */ ""} alt="Children support" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
-            <img src={/* livestockImg */ ""} alt="Livestock program" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
+          <div className="md:col-span-3 space-y-6">
+            <img src={img07} alt="Children support" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
+            <img src={img09} alt="Livestock program" className="w-full rounded-xl bg-slate-100 object-cover aspect-[4/3]" />
           </div>
 
           <div className="md:col-span-8 space-y-8 text-xs sm:text-sm text-[#555555]">
@@ -353,28 +278,26 @@ export default function FoodBankInitiative() {
         </div>
       </section>
 
-     {/* PAYMENT / KHQR PAYMENT STANDS SECTION */}
-<section className="max-w-4xl mx-auto px-4 pt-16 flex flex-col sm:flex-row justify-center items-center gap-8">
+      {/* PAYMENT / KHQR PAYMENT STANDS SECTION */}
+      <section className="max-w-4xl mx-auto px-4 pt-16 flex flex-col sm:flex-row justify-center items-center gap-8">
+        {/* KHR QR Code Standee Image */}
+        <div className="w-full max-w-xs rounded-xl overflow-hidden shadow-lg border border-slate-200  flex items-center justify-center">
+          <img 
+            src={khqrKhrImg} 
+            alt="KHQR KHR Payment Stand" 
+            className="w-full h-full object-contain" 
+          />
+        </div>
 
-  {/* KHR QR Code Standee Image */}
-  <div className="w-full max-w-xs rounded-xl overflow-hidden shadow-lg border border-slate-200 bg-slate-50 aspect-[3/4] flex items-center justify-center">
-    <img 
-      src={/* khqrKhrImg */ ""} 
-      alt="KHQR KHR Payment Stand" 
-      className="w-full h-full object-contain" 
-    />
-  </div>
-
-  {/* USD QR Code Standee Image */}
-  <div className="w-full max-w-xs rounded-xl overflow-hidden shadow-lg border border-slate-200 bg-slate-50 aspect-[3/4] flex items-center justify-center">
-    <img 
-      src={/* khqrUsdImg */ ""} 
-      alt="KHQR USD Payment Stand" 
-      className="w-full h-full object-contain" 
-    />
-  </div>
-
-</section>
+        {/* USD QR Code Standee Image */}
+        <div className="w-full max-w-xs rounded-xl overflow-hidden shadow-lg border border-slate-200  flex items-center justify-center">
+          <img 
+            src={khqrUsdImg} 
+            alt="KHQR USD Payment Stand" 
+            className="w-full h-full object-contain" 
+          />
+        </div>
+      </section>
 
     </div>
   );
